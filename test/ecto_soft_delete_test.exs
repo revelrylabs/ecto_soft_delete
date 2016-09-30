@@ -14,20 +14,8 @@ defmodule Ecto.SoftDelete.Test do
     end
   end
 
-  setup _ do
-    config = Application.get_env(:ecto_soft_delete, Ecto.SoftDelete.Test.Repo)
-    postgrex_config = [
-      database: config[:database],
-      hostname: config[:hostname],
-      port: config[:port]
-    ]
-
-    {:ok, pid} = Postgrex.start_link(postgrex_config)
-    {:ok, _} = Postgrex.query(pid, "DROP TABLE IF EXISTS users", [])
-    {:ok, _} = Postgrex.query(pid, "CREATE TABLE users (id serial primary key, email text, deleted_at timestamp without time zone)", [])
-    {:ok, _} = Repo.start_link()
-
-    :ok
+  setup do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
   end
 
   test "User has deleted_at field" do
@@ -40,8 +28,8 @@ defmodule Ecto.SoftDelete.Test do
 
 
   test "with_deleted on returns undeleted users" do
-    Repo.insert!(%User{email: "test@example.com"})
-    Repo.insert!(%User{email: "test@example.com", deleted_at: Ecto.DateTime.utc})
+    Repo.insert!(%User{email: "undeleted@example.com"})
+    Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
 
     query = from(u in User, select: u)
     |> with_undeleted
@@ -49,5 +37,6 @@ defmodule Ecto.SoftDelete.Test do
     results = Repo.all(query)
 
     assert 1 == length(results)
+    assert "undeleted@example.com" == hd(results).email
   end
 end

@@ -24,6 +24,6 @@ defmodule Ecto.SoftDelete.Migration do
 
   """
   def soft_delete_columns do
-    add(:deleted_at, :datetime, [])
+    add(:deleted_at, :utc_datetime, [])
   end
 end
