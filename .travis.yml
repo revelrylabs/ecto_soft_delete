@@ -1,0 +1,14 @@
+language: elixir
+dist: trusty
+elixir:
+  - 1.4.5
+otp_release:
+  - 20.0
+addons:
+  postgresql: "9.5"
+services:
+  - postgresql
+before_script:
+  - cp config/test.exs.travis config/test.exs
+  - MIX_ENV=test mix ecto.create
+  - MIX_ENV=test mix ecto.migrate
