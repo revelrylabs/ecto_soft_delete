@@ -1,4 +1,4 @@
-defmodule Ecto.SoftDelete.Test do
+defmodule Ecto.SoftDelete.Query.Test do
   use ExUnit.Case
   import Ecto.Query
   import Ecto.SoftDelete.Query
@@ -16,6 +16,20 @@ defmodule Ecto.SoftDelete.Test do
 
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+  end
+
+  test "deleted_at in schema" do
+    defmodule Something do
+      use Ecto.Schema
+      import Ecto.SoftDelete.Schema
+
+      schema "users" do
+        field :email,           :string
+        soft_delete_schema()
+      end
+    end
+
+    assert :deleted_at in Something.__schema__(:fields)
   end
 
   test "User has deleted_at field" do

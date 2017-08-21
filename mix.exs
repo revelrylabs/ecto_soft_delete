@@ -4,7 +4,7 @@ defmodule EctoSoftDelete.Mixfile do
   def project do
     [app: :ecto_soft_delete,
      version: "0.1.0",
-     elixir: "~> 1.3",
+     elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -17,7 +17,7 @@ defmodule EctoSoftDelete.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:ecto, :postgrex]]
+    [extra_applications: [:logger]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -34,12 +34,11 @@ defmodule EctoSoftDelete.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:ecto, "~> 2.1.0-rc.1"},
-      {:postgrex, ">= 0.0.0", only: [:test]},
-      {:ex_doc, "~> 0.14.1", only: [:dev, :test]},
-      {:earmark, "~> 1.0", only: [:dev, :test]},
-      {:credo, "~> 0.4.11", only: [:dev, :test]},
-      {:excoveralls, "~> 0.5.6", only: [:dev, :test]}
+      {:ecto, "~> 2.1.0"},
+      {:postgrex, "~> 0.13", only: [:test]},
+      {:ex_doc, "~> 0.16", only: [:dev, :test]},
+      {:credo, "~> 0.8", only: [:dev, :test]},
+      {:excoveralls, "~> 0.7", only: [:dev, :test]}
     ]
   end
 end
