@@ -7,4 +7,5 @@ config :ecto_soft_delete, Ecto.SoftDelete.Test.Repo,
   hostname: "localhost",
   port: 5432,
   adapter: Ecto.Adapters.Postgres,
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  types: EctoSoftDelete.PostgresTypes
