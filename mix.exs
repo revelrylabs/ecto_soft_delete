@@ -17,7 +17,8 @@ defmodule EctoSoftDelete.Mixfile do
         "coveralls.html": :test
       ],
       deps: deps(),
-      package: package()
+      package: package(),
+      description: description()
     ]
   end
 
@@ -36,6 +37,12 @@ defmodule EctoSoftDelete.Mixfile do
       {:credo, "~> 0.8", only: [:dev, :test]},
       {:excoveralls, "~> 0.7", only: [:dev, :test]}
     ]
+  end
+
+  defp description do
+    """
+    Soft deletion with Ecto.
+    """
   end
 
   defp package do
