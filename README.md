@@ -6,6 +6,8 @@
 
 Adds columns, fields, and queries for soft deletion with Ecto.
 
+[Documentation](https://hexdocs.pm/ecto_soft_delete)
+
 ## Usage
 
 ### Migrations
