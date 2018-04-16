@@ -2,9 +2,10 @@ language: elixir
 dist: trusty
 elixir:
   - 1.4.5
-  - 1.5.1
+  - 1.5
+  - 1.6
 otp_release:
-  - 20.0
+  - 20
 addons:
   postgresql: "9.5"
 services:

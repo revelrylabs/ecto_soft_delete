@@ -1,4 +1,6 @@
-Master build status: ![TravisCI Build Status](https://travis-ci.org/revelrylabs/ecto_soft_delete.svg)
+[![Build Status](https://travis-ci.org/revelrylabs/ecto_soft_delete.svg?branch=master)](https://travis-ci.org/revelrylabs/ecto_soft_delete)
+[![Hex.pm](https://img.shields.io/hexpm/dt/ecto_soft_delete.svg)](https://hex.pm/packages/ecto_soft_delete)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # EctoSoftDelete
 
@@ -61,7 +63,7 @@ Add to mix.exs:
 
 ```elixir
 defp deps do
-  [{:ecto_soft_delete, "0.1.0"}]
+  [{:ecto_soft_delete, "0.2.0"}]
 end
 ```
 
@@ -76,8 +78,6 @@ mix deps.get
 There are currently no configuration options.
 
 ## Usage
-
-
 
 ## Contributing
 
