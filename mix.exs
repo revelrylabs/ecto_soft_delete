@@ -35,7 +35,7 @@ defmodule EctoSoftDelete.Mixfile do
       {:postgrex, "~> 0.13", only: [:test]},
       {:ex_doc, "~> 0.16", only: [:dev, :test]},
       {:credo, "~> 0.8", only: [:dev, :test]},
-      {:excoveralls, "~> 0.7", only: [:dev, :test]}
+      {:excoveralls, "~> 0.8", only: [:dev, :test]}
     ]
   end
 

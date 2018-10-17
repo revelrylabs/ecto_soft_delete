@@ -7,9 +7,17 @@ elixir:
 otp_release:
   - 20.3
 addons:
-  postgresql: "9.5"
+  postgresql: '9.5'
 services:
   - postgresql
 before_script:
   - cp config/test.exs.travis config/test.exs
   - MIX_ENV=test mix ecto.create
+script:
+  - MIX_ENV=test mix coveralls.travis --pro
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: mix hex.publish --yes
+  on:
+    tags: true
