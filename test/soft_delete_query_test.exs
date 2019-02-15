@@ -9,7 +9,7 @@ defmodule Ecto.SoftDelete.Query.Test do
     import Ecto.SoftDelete.Schema
 
     schema "users" do
-      field :email,           :string
+      field(:email, :string)
       soft_delete_schema()
     end
   end
@@ -24,7 +24,7 @@ defmodule Ecto.SoftDelete.Query.Test do
       import Ecto.SoftDelete.Schema
 
       schema "users" do
-        field :email,           :string
+        field(:email, :string)
         soft_delete_schema()
       end
     end
@@ -34,19 +34,23 @@ defmodule Ecto.SoftDelete.Query.Test do
 
   test "User has deleted_at field" do
     Repo.insert!(%User{email: "test@example.com"})
-    query = from u in User, select: u
+    query = from(u in User, select: u)
     results = Repo.all(query)
 
     assert nil == hd(results).deleted_at
   end
 
-
   test "with_deleted on returns undeleted users" do
     Repo.insert!(%User{email: "undeleted@example.com"})
-    Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
 
-    query = from(u in User, select: u)
-    |> with_undeleted
+    Repo.insert!(%User{
+      email: "deleted@example.com",
+      deleted_at: DateTime.truncate(DateTime.utc_now(), :second)
+    })
+
+    query =
+      from(u in User, select: u)
+      |> with_undeleted
 
     results = Repo.all(query)
 
