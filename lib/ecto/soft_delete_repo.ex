@@ -14,6 +14,12 @@ defmodule Ecto.SoftDelete.Repo do
         |> update()
       end
 
+      def soft_delete!(struct_or_changeset) do
+        struct_or_changeset
+        |> Ecto.Changeset.change(deleted_at: utc_now())
+        |> update!()
+      end
+
       defp utc_now do
         DateTime.truncate(DateTime.utc_now(), :second)
       end
