@@ -60,6 +60,34 @@ query = from(u in User, select: u)
 results = Repo.all(query)
 ```
 
+## Repos
+
+To support deletion in repos, just add `use Ecto.SoftDelete.Repo` to your repo.
+After that, the functions `soft_delete!/1`, `soft_delete/1` and `soft_delete_all/1` will be available for you.
+
+```elixir
+# repo.ex
+defmodule Repo do
+  use Ecto.Repo,
+    otp_app: :my_app,
+    adapter: Ecto.Adapters.Postgres
+  use Ecto.SoftDelete.Repo
+end
+
+# posts.ex
+Repo.soft_delete_all(Post)
+from(p in Post, where: p.id < 10) |> Repo.soft_delete_all()
+
+post = Repo.get!(Post, 42)
+case Repo.soft_delete post do
+  {:ok, struct}       -> # Soft deleted with success
+  {:error, changeset} -> # Something went wrong
+end
+
+post = Repo.get!(Post, 42)
+struct = Repo.soft_delete!(post)
+```
+
 ## Installation
 
 Add to mix.exs:
