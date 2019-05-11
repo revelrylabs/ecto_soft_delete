@@ -22,7 +22,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert %User{} = Repo.soft_delete!(user)
 
-      assert Repo.get_by!(User, email: "test0@example.com").deleted_at != nil
+      assert %DateTime{} = Repo.get_by!(User, email: "test0@example.com").deleted_at
     end
 
     test "should return an error deleting" do
@@ -41,7 +41,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert {:ok, %User{}} = Repo.soft_delete(user)
 
-      assert Repo.get_by!(User, email: "test0@example.com").deleted_at != nil
+      assert %DateTime{} = Repo.get_by!(User, email: "test0@example.com").deleted_at
     end
 
     test "should return an error deleting" do
@@ -64,9 +64,9 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert User |> Repo.all() |> length() == 3
 
-      assert Repo.get_by!(User, email: "test0@example.com").deleted_at != nil
-      assert Repo.get_by!(User, email: "test1@example.com").deleted_at != nil
-      assert Repo.get_by!(User, email: "test2@example.com").deleted_at != nil
+      assert %DateTime{} = Repo.get_by!(User, email: "test0@example.com").deleted_at
+      assert %DateTime{} = Repo.get_by!(User, email: "test1@example.com").deleted_at
+      assert %DateTime{} = Repo.get_by!(User, email: "test2@example.com").deleted_at
     end
 
     test "when no results are found" do
