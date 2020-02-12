@@ -7,7 +7,7 @@ defmodule Ecto.SoftDelete.Migration.Test do
 
   setup meta do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
-    {:ok, runner} = Runner.start_link(self(), Repo, meta[:direction] || :forward, :up, %{level: false, sql: false})
+    {:ok, runner} = Runner.start_link({self(), Repo, __MODULE__, meta[:direction] || :forward, :up, %{level: false, sql: false}})
     Runner.metadata(runner, meta)
     {:ok, runner: runner}
   end

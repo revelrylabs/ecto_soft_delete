@@ -1,7 +1,7 @@
 language: elixir
 dist: trusty
 elixir:
-  - 1.8
+  - 1.9.4
 otp_release:
   - 21.1
 addons:
