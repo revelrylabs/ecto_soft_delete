@@ -79,9 +79,8 @@ defmodule Ecto.SoftDelete.Repo do
       NOTE: will not exclude soft deleted records if :with_deleted option passed as true
       """
       def prepare_query(_operation, query, opts) do
-        %{from: %{source: {_name, module}}} = Map.from_struct(query)
-
-        fields = module.__schema__(:fields)
+        schema_module = get_schema_module_from_query(query)
+        fields = if schema_module, do: schema_module.__schema__(:fields), else: []
         soft_deletable? = Enum.member?(fields, :deleted_at)
 
         if opts[:with_deleted] || !soft_deletable? do
@@ -91,6 +90,11 @@ defmodule Ecto.SoftDelete.Repo do
           {query, opts}
         end
       end
+
+      defp get_schema_module_from_query(%Ecto.Query{from: %{source: {_name, module}}}) do
+        module
+      end
+      defp get_schema_module_from_query(_), do: nil
     end
   end
 end
