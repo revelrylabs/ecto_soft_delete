@@ -17,7 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Ecto 3 support
 
-## [0.2.0]
+## [0.2.0] - 2020-05-06
+
+- Exclude soft deleted records by default in `Ecto.SoftDelete.Repo`
+- Make `soft_delete_fields` use `utc_datetime_usec`, which is expected by Ecto 3
 
 ### Fixed
 
