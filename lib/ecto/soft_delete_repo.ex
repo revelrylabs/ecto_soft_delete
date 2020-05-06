@@ -71,16 +71,6 @@ defmodule Ecto.SoftDelete.Repo do
         DateTime.truncate(DateTime.utc_now(), :second)
       end
 
-      def all(queryable, opts) do
-
-      end
-
-      def all_undeleted(queryable, opts) do
-        queryable
-
-        |> Ecto.Repo.all()
-      end
-
       @doc """
       Overrides all query operations to exclude soft deleted records
       if the schema in the from clause has a deleted_at column
