@@ -1,5 +1,4 @@
 defmodule Ecto.SoftDelete.Repo do
-  import Ecto.Query
   @moduledoc """
   Adds soft delete functions to an repository.
 
@@ -52,6 +51,8 @@ defmodule Ecto.SoftDelete.Repo do
 
   defmacro __using__(_opts) do
     quote do
+      import Ecto.Query
+
       def soft_delete_all(queryable) do
         update_all(queryable, set: [deleted_at: utc_now()])
       end
