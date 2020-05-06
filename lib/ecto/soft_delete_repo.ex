@@ -1,4 +1,5 @@
 defmodule Ecto.SoftDelete.Repo do
+  import Ecto.Query
   @moduledoc """
   Adds soft delete functions to an repository.
 

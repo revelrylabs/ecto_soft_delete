@@ -14,7 +14,6 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
   defmodule Nondeletable do
     use Ecto.Schema
-    import Ecto.SoftDelete.Schema
 
     schema "nondeletable" do
       field(:attribute, :string)
