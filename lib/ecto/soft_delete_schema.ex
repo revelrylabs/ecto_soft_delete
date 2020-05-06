@@ -19,7 +19,7 @@ defmodule Ecto.SoftDelete.Schema do
   """
   defmacro soft_delete_schema do
     quote do
-      field :deleted_at, :utc_datetime
+      field :deleted_at, :utc_datetime_usec
     end
   end
 end

@@ -54,23 +54,19 @@ defmodule Ecto.SoftDelete.Repo do
       import Ecto.Query
 
       def soft_delete_all(queryable) do
-        update_all(queryable, set: [deleted_at: utc_now()])
+        update_all(queryable, set: [deleted_at: DateTime.utc_now()])
       end
 
       def soft_delete(struct_or_changeset) do
         struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: utc_now())
+        |> Ecto.Changeset.change(deleted_at: DateTime.utc_now())
         |> update()
       end
 
       def soft_delete!(struct_or_changeset) do
         struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: utc_now())
+        |> Ecto.Changeset.change(deleted_at: DateTime.utc_now())
         |> update!()
-      end
-
-      defp utc_now do
-        DateTime.truncate(DateTime.utc_now(), :second)
       end
 
       @doc """

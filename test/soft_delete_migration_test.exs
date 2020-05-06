@@ -22,6 +22,6 @@ defmodule Ecto.SoftDelete.Migration.Test do
     flush()
 
     assert {:create, _,
-       [{:add, :deleted_at, :utc_datetime, []}]} = create_command
+       [{:add, :deleted_at, :utc_datetime_usec, []}]} = create_command
   end
 end

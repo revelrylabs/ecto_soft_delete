@@ -45,7 +45,7 @@ defmodule Ecto.SoftDelete.Query.Test do
 
     Repo.insert!(%User{
       email: "deleted@example.com",
-      deleted_at: DateTime.truncate(DateTime.utc_now(), :second)
+      deleted_at: DateTime.utc_now()
     })
 
     query =
