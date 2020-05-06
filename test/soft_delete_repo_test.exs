@@ -12,6 +12,15 @@ defmodule Ecto.SoftDelete.Repo.Test do
     end
   end
 
+  defmodule Nondeletable do
+    use Ecto.Schema
+    import Ecto.SoftDelete.Schema
+
+    schema "nondeletable" do
+      field(:attribute, :string)
+    end
+  end
+
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Ecto.SoftDelete.Test.Repo)
   end
@@ -71,6 +80,33 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
     test "when no results are found" do
       assert Repo.soft_delete_all(User) == {0, nil}
+    end
+  end
+
+  describe "prepare_query/3" do
+    test "excludes soft deleted records by default" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+      soft_deleted_user = Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+      results = User |> Repo.all()
+
+      assert Enum.member?(results, user)
+      refute Enum.member?(results, soft_deleted_user)
+    end
+
+    test "includes soft deleted records if :with_deleted option is present" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+      soft_deleted_user = Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+      results = User |> Repo.all(:with_deleted)
+
+      assert Enum.member?(results, user)
+      assert Enum.member?(results, soft_deleted_user)
+    end
+
+    test "works with schemas that don't have deleted_at column" do
+      Repo.insert!(%Nondeletable{attribute: "stuff"})
+      results = Nondeletable |> Repo.all()
+
+      assert length(results) == 1
     end
   end
 end
