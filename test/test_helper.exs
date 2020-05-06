@@ -11,6 +11,10 @@ defmodule Ecto.SoftDelete.Test.Migrations do
       add :email, :string
       soft_delete_columns()
     end
+
+    create table(:nondeletable) do
+      add :value, :string
+    end
   end
 end
 
