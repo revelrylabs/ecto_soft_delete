@@ -90,7 +90,7 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       # Checks the query to see if it contains a where not is_nil(deleted_at)
-      # if it does, we want to be sure that it we don't exclude soft deleted records
+      # if it does, we want to be sure that we don't exclude soft deleted records
       defp has_include_deleted_at_clause?(%Ecto.Query{wheres: wheres}) do
         Enum.any?(wheres, fn %{expr: expr} ->
           expr == {:not, [], [{:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}]}
