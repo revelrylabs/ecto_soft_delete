@@ -1,6 +1,7 @@
 defmodule Ecto.SoftDelete.Repo.Test do
   use ExUnit.Case
   alias Ecto.SoftDelete.Test.Repo
+  import Ecto.Query
 
   defmodule User do
     use Ecto.Schema
@@ -30,7 +31,8 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert %User{} = Repo.soft_delete!(user)
 
-      assert %DateTime{} = Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
     end
 
     test "should return an error deleting" do
@@ -49,7 +51,8 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert {:ok, %User{}} = Repo.soft_delete(user)
 
-      assert %DateTime{} = Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
     end
 
     test "should return an error deleting" do
@@ -72,9 +75,14 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert User |> Repo.all(with_deleted: true) |> length() == 3
 
-      assert %DateTime{} = Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
-      assert %DateTime{} = Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
-      assert %DateTime{} = Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
     end
 
     test "when no results are found" do
@@ -85,7 +93,10 @@ defmodule Ecto.SoftDelete.Repo.Test do
   describe "prepare_query/3" do
     test "excludes soft deleted records by default" do
       user = Repo.insert!(%User{email: "test0@example.com"})
-      soft_deleted_user = Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
+      soft_deleted_user =
+        Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
       results = User |> Repo.all()
 
       assert Enum.member?(results, user)
@@ -94,10 +105,28 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
     test "includes soft deleted records if :with_deleted option is present" do
       user = Repo.insert!(%User{email: "test0@example.com"})
-      soft_deleted_user = Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
+      soft_deleted_user =
+        Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
       results = User |> Repo.all(with_deleted: true)
 
       assert Enum.member?(results, user)
+      assert Enum.member?(results, soft_deleted_user)
+    end
+
+    test "includes soft deleted records if where not is_nil(deleted_at) clause is present" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+
+      soft_deleted_user =
+        Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
+      results =
+        User
+        |> where([u], not is_nil(u.deleted_at))
+        |> Repo.all()
+
+      refute Enum.member?(results, user)
       assert Enum.member?(results, soft_deleted_user)
     end
 

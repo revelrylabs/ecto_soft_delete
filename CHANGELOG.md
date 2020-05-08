@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2020-05-08
+
+- Add logic to `Ecto.SoftDelete.Repo.prepare_query` to respect `where` clauses that explicitly include records where deleted_at is not nil 
+
 ## [2.0.0] - 2020-05-06
 
 - Exclude soft deleted records by default in `Ecto.SoftDelete.Repo`
