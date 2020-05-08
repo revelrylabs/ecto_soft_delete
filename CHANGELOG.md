@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [2.0.1] - 2020-05-08
 
-- Add logic to `Ecto.SoftDelete.Repo.prepare_query` to respect where clauses that explicitly include records where deleted_at is not nil 
+- Add logic to `Ecto.SoftDelete.Repo.prepare_query` to respect `where` clauses that explicitly include records where deleted_at is not nil 
 
 ## [2.0.0] - 2020-05-06
 
