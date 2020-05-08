@@ -42,12 +42,14 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
   """
-  @callback soft_delete(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  @callback soft_delete(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
+              {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   @doc """
   Same as `c:soft_delete/1` but returns the struct or raises if the changeset is invalid.
   """
-  @callback soft_delete!(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) :: Ecto.Schema.t()
+  @callback soft_delete!(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
+              Ecto.Schema.t()
 
   defmacro __using__(_opts) do
     quote do
@@ -79,7 +81,7 @@ defmodule Ecto.SoftDelete.Repo do
         fields = if schema_module, do: schema_module.__schema__(:fields), else: []
         soft_deletable? = Enum.member?(fields, :deleted_at)
 
-        if opts[:with_deleted] || !soft_deletable? do
+        if has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable? do
           {query, opts}
         else
           query = from(x in query, where: is_nil(x.deleted_at))
@@ -87,9 +89,16 @@ defmodule Ecto.SoftDelete.Repo do
         end
       end
 
+      defp has_include_deleted_at_clause?(%{wheres: wheres}) do
+        Enum.find(wheres, fn %{expr: expr} ->
+          expr == {:not, [], [{:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}]}
+        end)
+      end
+
       defp get_schema_module_from_query(%Ecto.Query{from: %{source: {_name, module}}}) do
         module
       end
+
       defp get_schema_module_from_query(_), do: nil
     end
   end
