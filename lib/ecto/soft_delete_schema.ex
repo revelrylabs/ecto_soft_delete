@@ -1,10 +1,10 @@
 defmodule Ecto.SoftDelete.Schema do
   @moduledoc """
-  Contains schema macros to add soft delete fields to a schema
+  Contains schema macros to add soft delete fields to a schema.
   """
 
   @doc """
-  Adds the deleted_at column to a schema
+  Adds the `deleted_at` column to a schema.
 
       defmodule User do
         use Ecto.Schema

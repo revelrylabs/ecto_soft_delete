@@ -1,12 +1,12 @@
 defmodule Ecto.SoftDelete.Query do
   @moduledoc """
-  functions for querying data that is (or is not) soft deleted
+  Functions for querying data that is (or is not) soft deleted.
   """
 
   import Ecto.Query
 
   @doc """
-  Returns a query that searches only for undeleted items
+  Returns a query that searches only for undeleted items.
 
       query = from(u in User, select: u)
       |> with_undeleted

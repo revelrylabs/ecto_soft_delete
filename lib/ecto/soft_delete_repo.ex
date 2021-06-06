@@ -28,7 +28,9 @@ defmodule Ecto.SoftDelete.Repo do
 
   @doc """
   Soft deletes a struct.
+
   Updates the `deleted_at` field with the current datetime in UTC.
+
   It returns `{:ok, struct}` if the struct has been successfully
   soft deleted or `{:error, changeset}` if there was a validation
   or a known constraint error.
