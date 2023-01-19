@@ -25,16 +25,13 @@ defmodule Ecto.SoftDelete.Query do
   end
 
   @doc """
-  Determines if a given Ecto query is soft deletable.
+  Returns `true` if the query is soft deletable, `false` otherwise.
 
-  ### Parameters
+      query = from(u in User, select: u)
+      |> soft_deletable?
 
-      - `query`: An Ecto query struct.
-
-  ### Returns
-
-      - `true` if the query is soft deletable, `false` otherwise.
   """
+  @spec soft_deletable?(Ecto.Queryable.t) :: boolean()
   def soft_deletable?(query) do
     schema_module = get_schema_module(query)
     fields = if schema_module, do: schema_module.__schema__(:fields), else: []
