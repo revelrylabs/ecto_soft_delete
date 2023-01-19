@@ -36,15 +36,14 @@ defmodule Ecto.SoftDelete.Query do
       - `true` if the query is soft deletable, `false` otherwise.
   """
   def soft_deletable?(query) do
-    schema_module = get_schema_module_from_query(query)
+    schema_module = get_schema_module(query)
     fields = if schema_module, do: schema_module.__schema__(:fields), else: []
 
     Enum.member?(fields, :deleted_at)
   end
 
-  defp get_schema_module_from_query(%Ecto.Query{from: %{source: {_name, module}}}) do
-    module
-  end
-
-  defp get_schema_module_from_query(_), do: nil
+  defp get_schema_module({_raw_schema, module}) when not is_nil(module), do: module
+  defp get_schema_module(%Ecto.Query{from: %{source: source}}), do: get_schema_module(source)
+  defp get_schema_module(%Ecto.SubQuery{query: query}), do: get_schema_module(query)
+  defp get_schema_module(_), do: nil
 end
