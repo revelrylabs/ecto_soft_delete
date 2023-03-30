@@ -90,6 +90,66 @@ defmodule Ecto.SoftDelete.Repo.Test do
     end
   end
 
+  describe "soft_restore/1" do
+    test "should soft restore the queryable" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+
+      assert {:ok, %User{}} = Repo.soft_restore(user)
+
+      assert nil
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+    end
+
+    test "should return an error deleting" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+      Repo.delete!(user)
+
+      assert_raise Ecto.StaleEntryError, fn ->
+        Repo.soft_restore(user)
+      end
+    end
+  end
+
+  describe "soft_restore_all/1" do
+    test "soft deleted the query" do
+      Repo.insert!(%User{email: "test0@example.com"})
+      Repo.insert!(%User{email: "test1@example.com"})
+      Repo.insert!(%User{email: "test2@example.com"})
+
+      assert Repo.soft_delete_all(User) == {3, nil}
+
+      assert User |> Repo.all(with_deleted: true) |> length() == 3
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
+
+
+      assert Repo.soft_restore_all(User) == {3, nil}
+
+      assert User |> Repo.all(with_deleted: true) |> length() == 3
+
+      assert nil =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+
+      assert nil =
+               Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
+
+      assert nil =
+               Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
+    end
+
+    test "when no results are found" do
+      assert Repo.soft_delete_all(User) == {0, nil}
+    end
+  end
+
+
   describe "prepare_query/3" do
     test "excludes soft deleted records by default" do
       user = Repo.insert!(%User{email: "test0@example.com"})
