@@ -1,5 +1,5 @@
 language: elixir
-dist: trusty
+dist: zenial
 elixir:
   - 1.9.4
 otp_release:
