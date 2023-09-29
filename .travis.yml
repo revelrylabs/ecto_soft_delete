@@ -13,7 +13,6 @@ before_script:
   - MIX_ENV=test mix ecto.create
 script:
   - MIX_ENV=test mix test
-  - coveralls-multi
 deploy:
   skip_cleanup: true
   provider: script
