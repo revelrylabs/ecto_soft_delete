@@ -1,11 +1,13 @@
-# Setup for Development
+# Contributing
 
-```
+## Setup for Development
+
+```bash
 git clone https://github.com/revelrylabs/ecto_soft_delete
 mix deps.get
 ```
 
-# Submitting Changes
+## Submitting Changes
 
 1. Fork the repository.
 2. Set up the package per the instructions above and ensure `mix test`
