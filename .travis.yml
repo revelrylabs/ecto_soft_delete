@@ -1,9 +1,9 @@
 language: elixir
-dist: zenial
+dist: xenial
 elixir:
-  - 1.9.4
+  - 1.11.4
 otp_release:
-  - 21.1
+  - 24.3.4.13
 addons:
   postgresql: '9.5'
 services:
