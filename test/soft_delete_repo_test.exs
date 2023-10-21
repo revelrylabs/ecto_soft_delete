@@ -137,7 +137,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
       assert length(results) == 1
     end
 
-    test "returns same result for different types of where clauses", %{topic: topic} do
+    test "returns same result for different types of where clauses" do
       user = Repo.insert!(%User{email: "test0@example.com"})
 
       soft_deleted_user =
