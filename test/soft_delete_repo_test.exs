@@ -138,9 +138,9 @@ defmodule Ecto.SoftDelete.Repo.Test do
     end
 
     test "returns same result for different types of where clauses" do
-      user = Repo.insert!(%User{email: "test0@example.com"})
+      _user = Repo.insert!(%User{email: "test0@example.com"})
 
-      soft_deleted_user =
+      _soft_deleted_user =
         Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
 
       query_1 =

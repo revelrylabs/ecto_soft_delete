@@ -93,10 +93,12 @@ defmodule Ecto.SoftDelete.Repo do
       # if it does, we want to be sure that we don't exclude soft deleted records
       defp has_include_deleted_at_clause?(%Ecto.Query{wheres: wheres}) do
         Enum.any?(wheres, fn %{expr: expr} ->
-          expr = inspect(expr, limit: :infinity)
-
-          String.contains?(
-            expr,
+          expr
+          |> Inspect.Algebra.to_doc(%Inspect.Opts{
+            limit: :infinity,
+            inspect_fun: fn expr, _ -> inspect(expr) end
+          })
+          |> String.contains?(
             "{:not, [], [{:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}]}"
           )
         end)
