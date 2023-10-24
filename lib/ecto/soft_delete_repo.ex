@@ -95,8 +95,9 @@ defmodule Ecto.SoftDelete.Repo do
         Enum.any?(wheres, fn %{expr: expr} ->
           expr
           |> Inspect.Algebra.to_doc(%Inspect.Opts{
-            limit: :infinity,
-            inspect_fun: fn expr, _ -> inspect(expr) end
+            inspect_fun: fn expr, _ ->
+              inspect(expr, limit: :infinity)
+            end
           })
           |> String.contains?(
             "{:not, [], [{:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}]}"
