@@ -54,6 +54,7 @@ defmodule Ecto.SoftDelete.Repo do
   defmacro __using__(_opts) do
     quote do
       import Ecto.Query
+      import Ecto.SoftDelete.Query
 
       def soft_delete_all(queryable) do
         update_all(queryable, set: [deleted_at: DateTime.utc_now()])
@@ -77,11 +78,7 @@ defmodule Ecto.SoftDelete.Repo do
       NOTE: will not exclude soft deleted records if :with_deleted option passed as true
       """
       def prepare_query(_operation, query, opts) do
-        schema_module = get_schema_module_from_query(query)
-        fields = if schema_module, do: schema_module.__schema__(:fields), else: []
-        soft_deletable? = Enum.member?(fields, :deleted_at)
-
-        if has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable? do
+        if has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable?(query) do
           {query, opts}
         else
           query = from(x in query, where: is_nil(x.deleted_at))
@@ -96,12 +93,6 @@ defmodule Ecto.SoftDelete.Repo do
           expr == {:not, [], [{:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}]}
         end)
       end
-
-      defp get_schema_module_from_query(%Ecto.Query{from: %{source: {_name, module}}}) do
-        module
-      end
-
-      defp get_schema_module_from_query(_), do: nil
     end
   end
 end

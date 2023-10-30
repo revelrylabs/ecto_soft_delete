@@ -14,6 +14,14 @@ defmodule Ecto.SoftDelete.Query.Test do
     end
   end
 
+  defmodule Nondeletable do
+    use Ecto.Schema
+
+    schema "nondeletable" do
+      field(:value, :string)
+    end
+  end
+
   setup do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
   end
@@ -40,7 +48,7 @@ defmodule Ecto.SoftDelete.Query.Test do
     assert nil == hd(results).deleted_at
   end
 
-  test "with_deleted on returns undeleted users" do
+  test "with_undeleted on returns undeleted users" do
     Repo.insert!(%User{email: "undeleted@example.com"})
 
     Repo.insert!(%User{
@@ -56,5 +64,42 @@ defmodule Ecto.SoftDelete.Query.Test do
 
     assert 1 == length(results)
     assert "undeleted@example.com" == hd(results).email
+  end
+
+  test "with_undeleted returns the same query when the schema is not soft deletable" do
+    query = from(n in Nondeletable, select: n)
+
+    assert query == with_undeleted(query)
+  end
+
+  test "with_undeleted on subquery returns undeleted users" do
+    Repo.insert!(%User{email: "undeleted@example.com"})
+
+    Repo.insert!(%User{
+      email: "deleted@example.com",
+      deleted_at: DateTime.utc_now()
+    })
+
+    query =
+      from(u in User, select: u)
+      |> subquery()
+      |> select([u], count(u))
+      |> with_undeleted
+
+    results = Repo.one(query)
+
+    assert 1 == results
+  end
+
+  test "soft_deletable? returns true when the schema module has a deleted_at field" do
+    query = from(u in User, select: u)
+
+    assert soft_deletable?(query)
+  end
+
+  test "soft_deletable? returns false when the schema module does not have a deleted_at field" do
+    query = from(n in Nondeletable, select: n)
+
+    refute soft_deletable?(query)
   end
 end
