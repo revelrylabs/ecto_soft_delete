@@ -51,7 +51,7 @@ defmodule EctoSoftDelete.Mixfile do
       maintainers: ["Bryan Joseph", "Luke Ledet"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/revelrylabs/ecto_soft_delete"
+        "GitHub" => "https://github.com/data-twister/ecto_soft_delete"
       },
       build_tools: ["mix"]
     ]
