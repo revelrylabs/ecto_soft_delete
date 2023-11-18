@@ -94,8 +94,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
     test "should soft restore the queryable" do
        Repo.insert!(%User{email: "test0@example.com"}) |> Repo.soft_restore()
 
-      assert nil =
-               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+      assert Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at == nil
     end
   end
 
@@ -123,14 +122,11 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert User |> Repo.all(with_deleted: true) |> length() == 3
 
-      assert nil =
-               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+      assert Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at == nil
 
-      assert nil =
-               Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
+      assert Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at == nil
 
-      assert nil =
-               Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
+      assert Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at == nil
     end
 
     test "when no results are found" do
