@@ -1,0 +1,8 @@
+version: 2
+updates:
+# Maintain dependencies for Elixir
+- package-ecosystem: mix
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
