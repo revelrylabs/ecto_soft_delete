@@ -111,23 +111,23 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(queryable, key \\ "id") do
+      def soft_restore_all(queryable, repo, key \\ "id") do
         queryable = from(x in queryable, where: not is_nil(x.deleted_at))
 
-        Repo.get(queryable)
+        all(queryable)
         |> Enum.each(fn x ->
           source = x.__struct__.__schema__(:source)
           value = Map.fetch(x, String.to_atom(key))
 
           Ecto.Adapters.SQL.query!(
-            Repo,
+            repo,
             "Update deleted_at = NULL FROM #{source} where #{key} = $1",
             [value]
           )
         end)
       end
 
-      def soft_restore(struct_or_changeset, key \\ "id") do
+      def soft_restore(struct_or_changeset, repo,key \\ "id") do
         changeset =
           struct_or_changeset
           |> Ecto.Changeset.apply_changes()
@@ -137,13 +137,13 @@ defmodule Ecto.SoftDelete.Repo do
         source = changeset.__struct__.__schema__(:source)
 
         Ecto.Adapters.SQL.query(
-          Repo,
+          repo,
           "Update deleted_at = NULL FROM #{source} where #{key} = $1",
           [value]
         )
       end
 
-      def soft_restore!(struct_or_changeset, key \\ "id") do
+      def soft_restore!(struct_or_changeset, repo, key \\ "id") do
         changeset =
           struct_or_changeset
           |> Ecto.Changeset.apply_changes()
@@ -153,7 +153,7 @@ defmodule Ecto.SoftDelete.Repo do
         source = changeset.__struct__.__schema__(:source)
 
         Ecto.Adapters.SQL.query!(
-          Repo,
+          repo,
           "Update deleted_at = NULL FROM #{source} where #{key} = $1",
           [value]
         )
