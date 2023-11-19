@@ -121,7 +121,7 @@ defmodule Ecto.SoftDelete.Repo do
 
           Ecto.Adapters.SQL.query!(
             Repo,
-            "Update deleted_at = NULL FROM #{source} where id = $1",
+            "Update deleted_at = NULL FROM #{source} where #{key} = $1",
             [value]
           )
         end)
