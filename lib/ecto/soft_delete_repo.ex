@@ -126,31 +126,35 @@ defmodule Ecto.SoftDelete.Repo do
         end)
       end
 
-      def soft_restore(struct_or_changeset) do
+      def soft_restore(struct_or_changeset, key \\ "id") do
         changeset =
           struct_or_changeset
-          |> Ecto.Changeset.apply()
+          |> Ecto.Changeset.apply_changes()
+
+        value = Map.fetch(changeset, String.to_atom(key))
 
         source = changeset.__struct__.__schema__(:source)
 
         Ecto.Adapters.SQL.query(
           Repo,
-          "Update deleted_at = NULL FROM #{source} where id = $1",
-          [changeset.id]
+          "Update deleted_at = NULL FROM #{source} where #{key} = $1",
+          [value]
         )
       end
 
-      def soft_restore!(struct_or_changeset) do
+      def soft_restore!(struct_or_changeset, key \\ "id") do
         changeset =
           struct_or_changeset
-          |> Ecto.Changeset.apply()
+          |> Ecto.Changeset.apply_changes()
+
+        value = Map.fetch(changeset, String.to_atom(key))
 
         source = changeset.__struct__.__schema__(:source)
 
         Ecto.Adapters.SQL.query!(
           Repo,
-          "Update deleted_at = NULL FROM #{source} where id = $1",
-          [changeset.id]
+          "Update deleted_at = NULL FROM #{source} where #{key} = $1",
+          [value]
         )
       end
 
