@@ -115,7 +115,7 @@ defmodule Ecto.SoftDelete.Repo do
         queryable = from(x in queryable, where: not is_nil(x.deleted_at))
 
         all(queryable)
-        |> Enum.each(fn x ->
+        |> Enum.each(fn {_,x} ->
           source = x.__struct__.__schema__(:source)
           value = Map.fetch(x, String.to_atom(key))
 
@@ -131,7 +131,7 @@ defmodule Ecto.SoftDelete.Repo do
         changeset =
           struct_or_changeset
 
-        value = Map.fetch(changeset, String.to_atom(key))
+        {_,value} = Map.fetch(changeset, String.to_atom(key))
 
         source = changeset.__struct__.__schema__(:source)
 
@@ -146,7 +146,7 @@ defmodule Ecto.SoftDelete.Repo do
         changeset =
           struct_or_changeset
 
-        value = Map.fetch(changeset, String.to_atom(key))
+        {_,value} = Map.fetch(changeset, String.to_atom(key))
 
         source = changeset.__struct__.__schema__(:source)
 
