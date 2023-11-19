@@ -35,8 +35,8 @@ defmodule Ecto.SoftDelete.Repo do
 
   ## Examples
 
-      MyRepo.soft_delete_all(Post)
-      from(p in Post, where: p.id < 10) |> MyRepo.soft_delete_all()
+      MyRepo.soft_restore_all(Post)
+      from(p in Post, where: p.id < 10) |> MyRepo.soft_restore_all()
 
   """
   @callback soft_restore_all(queryable :: Ecto.Queryable.t()) :: {integer, nil | [term]}
@@ -66,6 +66,22 @@ defmodule Ecto.SoftDelete.Repo do
   @callback soft_delete!(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
               Ecto.Schema.t()
 
+  @doc """
+  Soft restores a struct.
+  Updates the `deleted_at` to null.
+  It returns `{:ok, struct}` if the struct has been successfully
+  soft deleted or `{:error, changeset}` if there was a validation
+  or a known constraint error.
+
+  ## Examples
+
+      post = MyRepo.get!(Post, 42)
+      case MyRepo.soft_restore post do
+        {:ok, struct}       -> "Soft restore with success"
+        {:error, changeset} ->  "Something went wrong"
+      end
+
+  """
   @callback soft_restore(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
               {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
@@ -97,18 +113,18 @@ defmodule Ecto.SoftDelete.Repo do
 
 
       def soft_restore_all(queryable) do
-        update_all(queryable, set: [deleted_at: nil])
+        update_all(queryable, set: [deleted_at: "NULL"])
       end
 
       def soft_restore(struct_or_changeset) do
         struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: nil)
+        |> Ecto.Changeset.change(deleted_at: "NULL")
         |> update()
       end
 
       def soft_restore!(struct_or_changeset) do
         struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: nil)
+        |> Ecto.Changeset.change(deleted_at: "NULL")
         |> update!()
       end
 
