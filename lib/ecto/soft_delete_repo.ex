@@ -114,7 +114,7 @@ defmodule Ecto.SoftDelete.Repo do
       def soft_restore_all(queryable) do
         queryable = from(x in queryable, where: not is_nil(x.deleted_at))
 
-        get(queryable)
+        Repo.get(queryable)
         |> Enum.each(fn x ->
           source = x.__struct__.__schema__(:source)
 
