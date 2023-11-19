@@ -111,22 +111,33 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(struct_or_changeset, repo) do
+      def soft_restore_all(struct_or_changeset, repo \\ :context) do
         source = Ecto.get_meta(struct_or_changeset, :source)
 
+        context =
+          case repo do
+            :context -> Ecto.get_meta(struct_or_changeset, :context)
+            _ -> repo
+          end
+
         Ecto.Adapters.SQL.query!(
-          repo,
+          context,
           "UPDATE #{source} SET deleted_at = NULL"
         )
       end
 
-      def soft_restore(struct_or_changeset, key \\ "id") do
+      def soft_restore(struct_or_changeset, key \\ "id", repo \\ :context) do
         value =
           Map.from_struct(struct_or_changeset)
           |> Map.get(String.to_atom(key))
 
         source = Ecto.get_meta(struct_or_changeset, :source)
-        context = Ecto.get_meta(struct_or_changeset, :context)
+
+        context =
+          case repo do
+            :context -> Ecto.get_meta(struct_or_changeset, :context)
+            _ -> repo
+          end
 
         Ecto.Adapters.SQL.query!(
           context,
