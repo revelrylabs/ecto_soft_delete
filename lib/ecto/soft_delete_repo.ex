@@ -115,7 +115,7 @@ defmodule Ecto.SoftDelete.Repo do
         queryable = from(x in queryable, where: not is_nil(x.deleted_at))
 
         all(queryable)
-        |> Enum.each(fn {_,x} ->
+        |> Enum.each(fn {_, x} ->
           source = x.__struct__.__schema__(:source)
           value = Map.fetch(x, String.to_atom(key))
 
@@ -128,12 +128,9 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       def soft_restore(struct_or_changeset, repo, key \\ "id") do
-        changeset =
-          struct_or_changeset
+        {_, value} = Map.fetch(struct_or_changeset, String.to_atom(key))
 
-        {_,value} = Map.fetch(changeset, String.to_atom(key))
-
-        source = changeset.__struct__.__schema__(:source)
+        source = struct_or_changeset.__struct__.__schema__(:source)
 
         Ecto.Adapters.SQL.query(
           repo,
@@ -143,12 +140,9 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       def soft_restore!(struct_or_changeset, repo, key \\ "id") do
-        changeset =
-          struct_or_changeset
+        {_, value} = Map.fetch(struct_or_changeset, String.to_atom(key))
 
-        {_,value} = Map.fetch(changeset, String.to_atom(key))
-
-        source = changeset.__struct__.__schema__(:source)
+        source = struct_or_changeset.__struct__.__schema__(:source)
 
         Ecto.Adapters.SQL.query!(
           repo,
