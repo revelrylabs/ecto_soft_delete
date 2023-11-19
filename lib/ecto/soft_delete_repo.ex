@@ -116,7 +116,8 @@ defmodule Ecto.SoftDelete.Repo do
 
         get(queryable)
         |> Enum.each(fn x ->
-        source = x.__struct__.__schema__(:source)
+          source = x.__struct__.__schema__(:source)
+
           Ecto.Adapters.SQL.query!(
             Repo,
             "Update deleted_at = NULL FROM #{source} where id = $1",
@@ -126,8 +127,9 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       def soft_restore(struct_or_changeset) do
-        changeset = struct_or_changeset
-        |> Ecto.Changeset.apply()
+        changeset =
+          struct_or_changeset
+          |> Ecto.Changeset.apply()
 
         source = changeset.__struct__.__schema__(:source)
 
@@ -139,8 +141,9 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       def soft_restore!(struct_or_changeset) do
-        changeset = struct_or_changeset
-                    |> Ecto.Changeset.apply()
+        changeset =
+          struct_or_changeset
+          |> Ecto.Changeset.apply()
 
         source = changeset.__struct__.__schema__(:source)
 
