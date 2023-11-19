@@ -132,7 +132,7 @@ defmodule Ecto.SoftDelete.Repo do
         )
       end
 
-      def soft_restore!(struct_or_changeset, key \\ "id") do
+      def soft_restore(struct_or_changeset, key \\ "id") do
         {_, value} = Map.fetch(struct_or_changeset, String.to_atom(key))
 
         source = struct_or_changeset.__struct__()[:schema]
