@@ -176,17 +176,11 @@ defmodule Ecto.SoftDelete.Repo do
         fields = if schema_module, do: schema_module.__schema__(:fields), else: []
         soft_deletable? = Enum.member?(fields, :deleted_at)
 
-        case has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable? do
-          true ->
-            {query, opts}
-
-          false ->
-            if has_excluded_deleted_at_clause?(query) do
-              {query, []}
-            else
-              query = from(x in query, where: is_nil(x.deleted_at))
-              {query, opts}
-            end
+        if has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable? do
+          {query, opts}
+        else
+          query = from(x in query, where: is_nil(x.deleted_at))
+          {query, opts}
         end
       end
 
@@ -195,12 +189,6 @@ defmodule Ecto.SoftDelete.Repo do
       defp has_include_deleted_at_clause?(%Ecto.Query{wheres: wheres}) do
         Enum.any?(wheres, fn %{expr: expr} ->
           expr == {:not, [], [{:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}]}
-        end)
-      end
-
-      defp has_excluded_deleted_at_clause?(%Ecto.Query{wheres: wheres}) do
-        Enum.any?(wheres, fn %{expr: expr} ->
-          expr == {:is_nil, [], [{{:., [], [{:&, [], [0]}, :deleted_at]}, [], []}]}
         end)
       end
 

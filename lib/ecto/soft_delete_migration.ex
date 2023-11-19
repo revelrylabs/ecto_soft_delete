@@ -29,6 +29,6 @@ defmodule Ecto.SoftDelete.Migration do
   end
 
   def soft_delete_index(table) do
-    create(index(table, [:deleted_at]))
+    create index(table, [:deleted_at])
   end
 end
