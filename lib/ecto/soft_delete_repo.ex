@@ -121,7 +121,7 @@ defmodule Ecto.SoftDelete.Repo do
 
           Ecto.Adapters.SQL.query!(
             repo,
-            "Update deleted_at = NULL FROM #{source} where #{key} = $1",
+            "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
             [value]
           )
         end)
@@ -137,7 +137,7 @@ defmodule Ecto.SoftDelete.Repo do
 
         Ecto.Adapters.SQL.query(
           repo,
-          "Update deleted_at = NULL FROM #{source} where #{key} = $1",
+          "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
           [value]
         )
       end
@@ -152,7 +152,7 @@ defmodule Ecto.SoftDelete.Repo do
 
         Ecto.Adapters.SQL.query!(
           repo,
-          "Update deleted_at = NULL FROM #{source} where #{key} = $1",
+          "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
           [value]
         )
       end
