@@ -18,6 +18,7 @@ defmodule Ecto.SoftDelete.Migration do
             add :password, :string
             timestamps()
             soft_delete_columns()
+            soft_delete_index(:users)
           end
         end
       end
@@ -25,5 +26,9 @@ defmodule Ecto.SoftDelete.Migration do
   """
   def soft_delete_columns do
     add(:deleted_at, :utc_datetime_usec, [])
+  end
+
+  def soft_delete_index(table) do
+    create index(table, [:deleted_at])
   end
 end
