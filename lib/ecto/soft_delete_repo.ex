@@ -112,7 +112,7 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       def soft_restore_all(struct_or_changeset, repo) do
-        source = struct_or_changeset.__struct__()[:schema]
+        source = get_in struct_or_changeset.__struct__(), [Access.key(:schema)]
 
         Ecto.Adapters.SQL.query!(
           repo,
@@ -122,9 +122,8 @@ defmodule Ecto.SoftDelete.Repo do
 
       def soft_restore(struct_or_changeset, key \\ "id") do
         value = struct_or_changeset[String.to_atom(key)]
-
-        source = struct_or_changeset.__struct__()[:schema]
-        context = struct_or_changeset.__struct__()[:context]
+        source = get_in struct_or_changeset.__struct__(), [Access.key(:schema)]
+        context = get_in struct_or_changeset.__struct__(), [Access.key(:schema)]
 
         Ecto.Adapters.SQL.query!(
           context,
