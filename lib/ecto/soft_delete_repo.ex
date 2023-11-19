@@ -111,7 +111,7 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(queryable, repo, key \\ "id") do
+      def soft_restore_all(queryable, repo, key \\ "id") when is_list(queryable) do
         queryable = from(x in queryable, where: not is_nil(x.deleted_at))
 
         all(queryable)
@@ -125,6 +125,15 @@ defmodule Ecto.SoftDelete.Repo do
             [value]
           )
         end)
+      end
+
+      def soft_restore_all(queryable, repo) do
+        source = queryable.__struct__.__schema__(:source)
+
+        Ecto.Adapters.SQL.query!(
+          repo,
+          "UPDATE #{source} SET deleted_at = NULL"
+        )
       end
 
       def soft_restore(struct_or_changeset, repo, key \\ "id") do
