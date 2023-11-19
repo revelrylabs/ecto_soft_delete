@@ -121,6 +121,8 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
       def soft_restore(struct_or_changeset, key \\ "id") do
+        require Logger
+        Logger.error(struct_or_changeset)
         value = struct_or_changeset[String.to_atom(key)]
         {_,source} =  Ecto.get_meta(struct_or_changeset, :source)
         context =  Ecto.get_meta(struct_or_changeset, :context)
