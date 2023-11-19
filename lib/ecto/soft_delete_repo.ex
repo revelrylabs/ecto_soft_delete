@@ -111,35 +111,35 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(queryable) do
-        source = Ecto.Schema.Metadata.source(queryable)
-        context = Ecto.Schema.Metadata.context(queryable)
+      def soft_restore_all(struct_or_changeset, repo) do
+        source = Map.get(struct_or_changeset, __meta__)[:schema]
 
         Ecto.Adapters.SQL.query!(
-          context,
+          repo,
           "UPDATE #{source} SET deleted_at = NULL"
         )
       end
 
-      def soft_restore(struct_or_changeset, key \\ "id") do
+      def soft_restore(struct_or_changeset, repo, key \\ "id") do
         {_, value} = Map.fetch(struct_or_changeset, String.to_atom(key))
-        source = Ecto.Schema.Metadata.source(struct_or_changeset)
-        context = Ecto.Schema.Metadata.context(struct_or_changeset)
+
+        source = Map.get(struct_or_changeset, __meta__)[:schema]
 
         Ecto.Adapters.SQL.query(
-          context,
+          repo,
           "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
           [value]
         )
       end
 
-      def soft_restore!(struct_or_changeset, repo, key \\ "id") do
+      def soft_restore!(struct_or_changeset, key \\ "id") do
         {_, value} = Map.fetch(struct_or_changeset, String.to_atom(key))
 
-        source = struct_or_changeset.__struct__.__schema__(:source)
+        source = Map.get(struct_or_changeset, __meta__)[:schema]
+        context = Map.get(struct_or_changeset, __meta__)[:context]
 
         Ecto.Adapters.SQL.query!(
-          repo,
+          context,
           "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
           [value]
         )
