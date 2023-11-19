@@ -111,22 +111,6 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(queryable, repo, key \\ "id") when is_list(queryable) do
-        queryable = from(x in queryable, where: not is_nil(x.deleted_at))
-
-        all(queryable)
-        |> Enum.each(fn {_, x} ->
-          source = x.__struct__.__schema__(:source)
-          value = Map.fetch(x, String.to_atom(key))
-
-          Ecto.Adapters.SQL.query!(
-            repo,
-            "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
-            [value]
-          )
-        end)
-      end
-
       def soft_restore_all(queryable, repo) do
         source = queryable.__struct__.__schema__(:source)
 
