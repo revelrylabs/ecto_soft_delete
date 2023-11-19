@@ -120,10 +120,20 @@ defmodule Ecto.SoftDelete.Repo do
             _ -> repo
           end
 
-        Ecto.Adapters.SQL.query!(
-          context,
-          "UPDATE #{source} SET deleted_at = NULL"
-        )
+        %{
+          columns: _,
+          command: _,
+          connection_id: _,
+          messages: _,
+          num_rows: num_rows,
+          rows: rows
+        } =
+          Ecto.Adapters.SQL.query!(
+            context,
+            "UPDATE #{source} SET deleted_at = NULL"
+          )
+
+        {num_rows, rows}
       end
 
       def soft_restore(struct_or_changeset, key \\ "id", repo \\ :context) do
@@ -139,11 +149,21 @@ defmodule Ecto.SoftDelete.Repo do
             _ -> repo
           end
 
-        Ecto.Adapters.SQL.query!(
-          context,
-          "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
-          [value]
-        )
+        %{
+          columns: _,
+          command: _,
+          connection_id: _,
+          messages: _,
+          num_rows: num_rows,
+          rows: rows
+        } =
+          Ecto.Adapters.SQL.query!(
+            context,
+            "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
+            [value]
+          )
+
+        {num_rows, rows}
       end
 
       @doc """
