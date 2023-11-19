@@ -92,7 +92,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
   describe "soft_restore/1" do
     test "should soft restore the queryable" do
-      Repo.insert!(%User{email: "test0@example.com"}) |> Repo.soft_restore(Repo)
+      Repo.insert!(%User{email: "test0@example.com"}) |> Repo.soft_restore()
 
       assert Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at ==
                nil
@@ -118,7 +118,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
       assert %DateTime{} =
                Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
 
-      assert Repo.soft_restore_all(User, Repo) == {3, nil}
+      assert Repo.soft_restore_all(User) == {3, nil}
 
       assert User |> Repo.all(with_deleted: true) |> length() == 3
 
