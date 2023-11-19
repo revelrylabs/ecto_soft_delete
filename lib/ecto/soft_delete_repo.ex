@@ -35,11 +35,11 @@ defmodule Ecto.SoftDelete.Repo do
 
   ## Examples
 
-      MyRepo.soft_restore_all(Post)
-      from(p in Post, where: p.id < 10) |> MyRepo.soft_restore_all()
+    MyRepo.soft_restore_all(%Post{}, MyRepo)
+
 
   """
-  @callback soft_restore_all(queryable :: Ecto.Queryable.t()) :: {integer, nil | [term]}
+  @callback soft_restore_all(struct :: Ecto.Schema.t()) :: {integer, nil | [term]}
 
   @doc """
   Soft deletes a struct.
@@ -82,13 +82,13 @@ defmodule Ecto.SoftDelete.Repo do
       end
 
   """
-  @callback soft_restore(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
+  @callback soft_restore(struct :: Ecto.Schema.t()) ::
               {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   @doc """
   Same as `c:soft_restore/1` but returns the struct or raises if the changeset is invalid.
   """
-  @callback soft_restore!(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
+  @callback soft_restore!(struct :: Ecto.Schema.t()) ::
               Ecto.Schema.t()
 
   defmacro __using__(_opts) do
