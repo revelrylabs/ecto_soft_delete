@@ -136,7 +136,7 @@ defmodule Ecto.SoftDelete.Repo do
         {num_rows, rows}
       end
 
-      def soft_restore(struct, key \\ "id", repo \\ :context) do
+      def soft_restore(struct, repo \\ :context, key \\ "id") do
         value =
           Map.from_struct(struct)
           |> Map.get(String.to_atom(key))
