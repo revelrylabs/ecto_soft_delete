@@ -130,7 +130,6 @@ defmodule Ecto.SoftDelete.Repo do
       def soft_restore(struct_or_changeset, repo, key \\ "id") do
         changeset =
           struct_or_changeset
-          |> Ecto.Changeset.apply_changes()
 
         value = Map.fetch(changeset, String.to_atom(key))
 
@@ -146,7 +145,6 @@ defmodule Ecto.SoftDelete.Repo do
       def soft_restore!(struct_or_changeset, repo, key \\ "id") do
         changeset =
           struct_or_changeset
-          |> Ecto.Changeset.apply_changes()
 
         value = Map.fetch(changeset, String.to_atom(key))
 
