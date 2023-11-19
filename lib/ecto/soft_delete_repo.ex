@@ -127,7 +127,7 @@ defmodule Ecto.SoftDelete.Repo do
         end)
       end
 
-      def soft_restore(struct_or_changeset, repo,key \\ "id") do
+      def soft_restore(struct_or_changeset, repo, key \\ "id") do
         changeset =
           struct_or_changeset
           |> Ecto.Changeset.apply_changes()
