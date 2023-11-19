@@ -111,12 +111,12 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(struct_or_changeset, repo \\ :context) do
-        source = Ecto.get_meta(struct_or_changeset, :source)
+      def soft_restore_all(struct, repo \\ :context) do
+        source = Ecto.get_meta(struct, :source)
 
         context =
           case repo do
-            :context -> Ecto.get_meta(struct_or_changeset, :context)
+            :context -> Ecto.get_meta(struct, :context)
             _ -> repo
           end
 
@@ -136,16 +136,16 @@ defmodule Ecto.SoftDelete.Repo do
         {num_rows, rows}
       end
 
-      def soft_restore(struct_or_changeset, key \\ "id", repo \\ :context) do
+      def soft_restore(struct, key \\ "id", repo \\ :context) do
         value =
-          Map.from_struct(struct_or_changeset)
+          Map.from_struct(struct)
           |> Map.get(String.to_atom(key))
 
-        source = Ecto.get_meta(struct_or_changeset, :source)
+        source = Ecto.get_meta(struct, :source)
 
         context =
           case repo do
-            :context -> Ecto.get_meta(struct_or_changeset, :context)
+            :context -> Ecto.get_meta(struct, :context)
             _ -> repo
           end
 
