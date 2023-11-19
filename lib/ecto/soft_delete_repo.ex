@@ -113,18 +113,18 @@ defmodule Ecto.SoftDelete.Repo do
 
 
       def soft_restore_all(queryable) do
-        update_all(queryable, set: [deleted_at: "NULL"])
+        update_all(queryable, set: [deleted_at: nil])
       end
 
       def soft_restore(struct_or_changeset) do
         struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: "NULL")
+        |> Ecto.Changeset.change(deleted_at: nil)
         |> update()
       end
 
       def soft_restore!(struct_or_changeset) do
         struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: "NULL")
+        |> Ecto.Changeset.change(deleted_at: nil)
         |> update!()
       end
 
