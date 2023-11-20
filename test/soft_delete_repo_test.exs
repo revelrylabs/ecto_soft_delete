@@ -136,5 +136,27 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert length(results) == 1
     end
+
+    test "returns same result for different types of where clauses" do
+      _user = Repo.insert!(%User{email: "test0@example.com"})
+
+      _soft_deleted_user =
+        Repo.insert!(%User{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
+      query_1 =
+        from(u in User,
+          select: u,
+          where: u.email == "test0@example.com" and not is_nil(u.deleted_at)
+        )
+
+      query_2 =
+        from(u in User,
+          select: u,
+          where: u.email == "test0@example.com",
+          where: not is_nil(u.deleted_at)
+        )
+
+      assert Repo.all(query_2) == Repo.all(query_1)
+    end
   end
 end
