@@ -27,7 +27,7 @@ defmodule Ecto.SoftDelete.Repo do
   @callback soft_delete_all(queryable :: Ecto.Queryable.t()) :: {integer, nil | [term]}
 
   @doc """
-  Restores all entries matching the given query.
+  Soft restores all entries matching the given query.
 
   It returns a tuple containing the number of entries and any returned
   result as second element. The second element is `nil` by default
@@ -35,11 +35,11 @@ defmodule Ecto.SoftDelete.Repo do
 
   ## Examples
 
-    MyRepo.restore_all(%Post{}, MyRepo)
+    MyRepo.soft_restore_all(%Post{}, MyRepo)
 
 
   """
-  @callback restore_all(struct :: Ecto.Schema.t()) :: {integer, nil | [term]}
+  @callback soft_restore_all(struct :: Ecto.Schema.t()) :: {integer, nil | [term]}
 
   @doc """
   Soft deletes a struct.
@@ -76,19 +76,19 @@ defmodule Ecto.SoftDelete.Repo do
   ## Examples
 
       post = MyRepo.get!(Post, 42)
-      case MyRepo.restore post do
+      case MyRepo.soft_restore post do
         {:ok, struct}       -> "Soft restore with success"
         {:error, changeset} ->  "Something went wrong"
       end
 
   """
-  @callback restore(struct :: Ecto.Schema.t()) ::
+  @callback soft_restore(struct :: Ecto.Schema.t()) ::
               {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   @doc """
-  Same as `c:restore/1` but returns the struct or raises if the changeset is invalid.
+  Same as `c:soft_restore/1` but returns the struct or raises if the changeset is invalid.
   """
-  @callback restore!(struct :: Ecto.Schema.t()) ::
+  @callback soft_restore!(struct :: Ecto.Schema.t()) ::
               Ecto.Schema.t()
 
   defmacro __using__(_opts) do
@@ -111,7 +111,7 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def restore_all(struct, repo \\ :context) do
+      def soft_restore_all(struct, repo \\ :context) do
         source = Ecto.get_meta(struct, :source)
 
         context =
@@ -136,7 +136,7 @@ defmodule Ecto.SoftDelete.Repo do
         {num_rows, rows}
       end
 
-      def restore(struct, repo \\ :context, key \\ "id") do
+      def soft_restore(struct, repo \\ :context, key \\ "id") do
         value =
           Map.from_struct(struct)
           |> Map.get(String.to_atom(key))
