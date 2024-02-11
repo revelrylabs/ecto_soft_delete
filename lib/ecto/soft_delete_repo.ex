@@ -111,59 +111,20 @@ defmodule Ecto.SoftDelete.Repo do
         |> update!()
       end
 
-      def soft_restore_all(struct, repo \\ :context) do
-        source = Ecto.get_meta(struct, :source)
-
-        context =
-          case repo do
-            :context -> Ecto.get_meta(struct, :context)
-            _ -> repo
-          end
-
-        %{
-          columns: _,
-          command: _,
-          connection_id: _,
-          messages: _,
-          num_rows: num_rows,
-          rows: rows
-        } =
-          Ecto.Adapters.SQL.query!(
-            context,
-            "UPDATE #{source} SET deleted_at = NULL"
-          )
-
-        {num_rows, rows}
+      def soft_restore_all(queryable) do
+        update_all(queryable, set: [deleted_at: nil])
       end
 
-      def soft_restore(struct, repo \\ :context, key \\ "id") do
-        value =
-          Map.from_struct(struct)
-          |> Map.get(String.to_atom(key))
+      def soft_restore(struct_or_changeset) do
+        struct_or_changeset
+        |> Ecto.Changeset.change(deleted_at: nil)
+        |> update()
+      end
 
-        source = Ecto.get_meta(struct, :source)
-
-        context =
-          case repo do
-            :context -> Ecto.get_meta(struct, :context)
-            _ -> repo
-          end
-
-        %{
-          columns: _,
-          command: _,
-          connection_id: _,
-          messages: _,
-          num_rows: num_rows,
-          rows: rows
-        } =
-          Ecto.Adapters.SQL.query!(
-            context,
-            "UPDATE #{source} SET deleted_at = NULL WHERE #{key} = $1",
-            [value]
-          )
-
-        {num_rows, rows}
+      def soft_restore!(struct_or_changeset) do
+        struct_or_changeset
+        |> Ecto.Changeset.change(deleted_at: nil)
+        |> update!()
       end
 
       @doc """
