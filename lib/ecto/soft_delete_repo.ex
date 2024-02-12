@@ -39,7 +39,7 @@ defmodule Ecto.SoftDelete.Repo do
 
 
   """
-  @callback soft_restore_all(struct :: Ecto.Schema.t()) :: {integer, nil | [term]}
+  @callback soft_restore_all(struct :: Ecto.Queryable.t()) :: {integer, nil | [term]}
 
   @doc """
   Soft deletes a struct.
