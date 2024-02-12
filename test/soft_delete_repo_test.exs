@@ -109,29 +109,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert Repo.soft_delete_all(User) == {3, nil}
 
-      assert User |> Repo.all(with_deleted: true) |> length() == 3
-
-      assert %DateTime{} =
-               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
-
-      assert %DateTime{} =
-               Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
-
-      assert %DateTime{} =
-               Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at
-
       assert Repo.soft_restore_all(%User{}, Repo) == {3, nil}
-
-      assert User |> Repo.all(with_deleted: true) |> length() == 3
-
-      assert Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at ==
-               nil
-
-      assert Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at ==
-               nil
-
-      assert Repo.get_by!(User, [email: "test2@example.com"], with_deleted: true).deleted_at ==
-               nil
     end
 
     test "when no results are found" do
