@@ -90,6 +90,33 @@ defmodule Ecto.SoftDelete.Repo.Test do
     end
   end
 
+  describe "soft_restore/1" do
+    test "should soft restore the queryable" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+      user = Repo.soft_delete!(user)
+      Repo.soft_restore(user, Repo)
+
+      assert Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at ==
+               nil
+    end
+  end
+
+  describe "soft_restore_all/1" do
+    test "soft deleted the query" do
+      Repo.insert!(%User{email: "test0@example.com"})
+      Repo.insert!(%User{email: "test1@example.com"})
+      Repo.insert!(%User{email: "test2@example.com"})
+
+      assert Repo.soft_delete_all(User) == {3, nil}
+
+      assert Repo.soft_restore_all(%User{}, Repo) == {3, nil}
+    end
+
+    test "when no results are found" do
+      assert Repo.soft_delete_all(User) == {0, nil}
+    end
+  end
+
   describe "prepare_query/3" do
     test "excludes soft deleted records by default" do
       user = Repo.insert!(%User{email: "test0@example.com"})

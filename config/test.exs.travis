@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :ecto_soft_delete, ecto_repos: [Ecto.SoftDelete.Test.Repo]
 

@@ -14,7 +14,7 @@ defmodule Ecto.SoftDelete.Query do
       results = Repo.all(query)
 
   """
-  @spec with_undeleted(Ecto.Queryable.t) :: Ecto.Queryable.t
+  @spec with_undeleted(Ecto.Queryable.t()) :: Ecto.Queryable.t()
   def with_undeleted(query) do
     query
     |> where([t], is_nil(t.deleted_at))
