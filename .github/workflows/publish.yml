@@ -2,8 +2,8 @@ name: Publish
 
 on:
   push:
-    # tags: [ 'v*.*.*' ]
-    branches: 245-github-actions-migrate
+    tags: [ 'v*.*.*' ]
+    branches: master
 
 env:
   OTP_VERSION_SPEC: "21.1"
