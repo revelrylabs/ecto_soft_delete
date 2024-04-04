@@ -10,6 +10,8 @@ env:
   ELIXIR_VERSION_SPEC: "1.9.4"
 
 jobs:
+  test:
+    uses: ./.github/workflows/test.yml
   publish:
     needs: test
     runs-on: ubuntu-20.04
@@ -23,4 +25,4 @@ jobs:
           elixir-version: ${{ env.ELIXIR_VERSION_SPEC }}
 
       - name: Publish
-        run: mix hex.publish
+        run: mix hex.publish --yes
