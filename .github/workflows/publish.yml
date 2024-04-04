@@ -2,8 +2,8 @@ name: Publish
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
-    branches: master
+    # tags: [ 'v*.*.*' ]
+    branches: 245-github-actions-migrate
 
 env:
   OTP_VERSION_SPEC: "21.1"
@@ -23,4 +23,4 @@ jobs:
           elixir-version: ${{ env.ELIXIR_VERSION_SPEC }}
 
       - name: Publish
-        run: mix hex.publish --yes
+        run: mix hex.publish
