@@ -24,7 +24,10 @@ jobs:
           otp-version: ${{ env.OTP_VERSION_SPEC }}
           elixir-version: ${{ env.ELIXIR_VERSION_SPEC }}
 
+      # https://hex.pm/docs/publish
       - name: Publish
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
         run: |
           mix deps.get
           mix hex.publish --yes
