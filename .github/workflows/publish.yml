@@ -25,4 +25,6 @@ jobs:
           elixir-version: ${{ env.ELIXIR_VERSION_SPEC }}
 
       - name: Publish
-        run: mix hex.publish --yes
+        run: |
+          mix deps.get
+          mix hex.publish --yes
