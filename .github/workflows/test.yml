@@ -1,0 +1,50 @@
+name: Test
+
+on: push
+
+env:
+  OTP_VERSION_SPEC: "21.1"
+  ELIXIR_VERSION_SPEC: "1.9.4"
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    services:
+      postgres:
+        env:
+          MIX_ENV: test
+          PGUSER: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_HOST_AUTH_METHOD: trust
+        image: postgres:9.5
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - uses: erlef/setup-beam@v1
+      with:
+        otp-version: ${{ env.OTP_VERSION_SPEC }}
+        elixir-version: ${{ env.ELIXIR_VERSION_SPEC }}
+
+    - name: Run Tests
+      env:
+        MIX_ENV: test
+        PGUSER: postgres
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+      run: |
+        mix deps.get
+        cp config/test.exs.GH_actions config/test.exs
+        mix ecto.create
+        mix test
