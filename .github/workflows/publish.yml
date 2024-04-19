@@ -3,7 +3,6 @@ name: Publish
 on:
   push:
     tags: [ 'v*.*.*' ]
-    branches: master
 
 env:
   OTP_VERSION_SPEC: "21.1"
@@ -14,6 +13,7 @@ jobs:
     uses: ./.github/workflows/test.yml
   publish:
     needs: test
+    if: ${{ github.ref_name == 'master' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
