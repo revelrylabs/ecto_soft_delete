@@ -31,8 +31,8 @@ defmodule EctoSoftDelete.Mixfile do
 
   defp deps do
     [
-      {:ecto_sql, "~> 3.10"},
-      {:postgrex, "~> 0.17.3", only: [:test]},
+      {:ecto_sql, "~> 3.11.0"},
+      {:postgrex, "~> 0.17.0", only: [:test]},
       {:ex_doc, "~> 0.30.6", only: [:dev, :test]},
       {:credo, "~> 1.7", only: [:dev, :test]},
       {:excoveralls, "~> 0.17.1", only: [:dev, :test]}
