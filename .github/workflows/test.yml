@@ -3,8 +3,8 @@ name: Test
 on: [push, workflow_call]
 
 env:
-  OTP_VERSION_SPEC: "21.1"
-  ELIXIR_VERSION_SPEC: "1.9.4"
+  OTP_VERSION_SPEC: "25.3"
+  ELIXIR_VERSION_SPEC: "1.13.4"
   MIX_ENV: test
   PGUSER: postgres
   POSTGRES_USER: postgres
