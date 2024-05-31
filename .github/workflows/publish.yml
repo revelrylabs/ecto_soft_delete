@@ -2,8 +2,7 @@ name: Publish
 
 on:
   push:
-    tags: [ 'v*.*.*' ]
-    branches: master
+    tags: ["v*.*.*"]
 
 env:
   OTP_VERSION_SPEC: "25.3"
