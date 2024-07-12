@@ -2,13 +2,13 @@ defmodule EctoSoftDelete.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/revelrylabs/ecto_soft_delete"
-  @version "2.0.2"
+  @version "2.0.4"
 
   def project do
     [
       app: :ecto_soft_delete,
       version: @version,
-      elixir: "~> 1.9",
+      elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
@@ -34,7 +34,7 @@ defmodule EctoSoftDelete.Mixfile do
 
   defp deps do
     [
-      {:ecto_sql, "~> 3.0"},
+      {:ecto_sql, "~> 3.5"},
       {:postgrex, ">= 0.0.0", only: [:test]},
       {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
       {:credo, "~> 1.0", only: [:dev, :test]},

@@ -1,0 +1,50 @@
+name: Test
+
+on: [push, workflow_call]
+
+env:
+  MIX_ENV: test
+  PGUSER: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+
+jobs:
+  test:
+    name: Test on OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        include:
+          - otp: "21"
+            elixir: "1.11"
+          - otp: "26"
+            elixir: "1.16"
+    services:
+      postgres:
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+        image: postgres:9.5
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s
+          --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - name: Run Tests
+        run: |
+          mix deps.get
+          cp config/test.exs.GH_actions config/test.exs
+          mix ecto.create
+          mix test

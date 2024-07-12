@@ -87,12 +87,22 @@ query = from(u in User, select: u)
 results = Repo.all(query)
 ```
 
-### Repos
+### Getting Deleted Rows
+
+To query for items that have been deleted, use `with_deleted: true` 
+
+```elixir
+import Ecto.Query
+
+query = from(u in User, select: u)
+
+results = Repo.all(query, with_deleted: true)
+```
+
+## Repos
 
 To support deletion in repos, just add `use Ecto.SoftDelete.Repo` to your repo.
-
-After that, the functions `soft_delete!/1`, `soft_delete/1` and
-`soft_delete_all/1` will be available for you.
+After that, the functions `soft_delete!/1`, `soft_delete/1` and `soft_delete_all/1` will be available for you.
 
 ```elixir
 # repo.ex
@@ -117,18 +127,31 @@ post = Repo.get!(Post, 42)
 struct = Repo.soft_delete!(post)
 ```
 
+## Installation
+
+Add to mix.exs:
+
+```elixir
+defp deps do
+  [{:ecto_soft_delete, "~> 2.0"}]
+end
+```
+
+and do
+
+```
+mix deps.get
+```
+
+## Configuration
+
+There are currently no configuration options.
+
+## Usage
+
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at
-https://github.com/revelrylabs/ecto_soft_delete. Check out
-[CONTRIBUTING.md](./CONTRIBUTING.md) for more info.
+Bug reports and pull requests are welcome on GitHub at https://github.com/revelrylabs/ecto_soft_delete. Check out [CONTRIBUTING.md](https://github.com/revelrylabs/ecto_soft_delete/blob/master/CONTRIBUTING.md) for more info.
 
 Everyone is welcome to participate in the project. We expect contributors to
-adhere the Contributor Covenant Code of Conduct (see [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)).
-
-## Copyright and License
-
-Copyright (c) 2018 Revelry Labs LLC
-
-This library is released under the MIT License. See the [LICENSE.md](./LICENSE.md) file
-for further details.
+adhere the Contributor Covenant Code of Conduct (see [CODE_OF_CONDUCT.md](https://github.com/revelrylabs/ecto_soft_delete/blob/master/CODE_OF_CONDUCT.md)).
