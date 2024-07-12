@@ -62,7 +62,7 @@ results = Repo.all(query)
 
 ### Getting Deleted Rows
 
-To query fro items that has been deleted, use `with_deleted` 
+To query for items that have been deleted, use `with_deleted: true` 
 
 ```elixir
 import Ecto.Query
