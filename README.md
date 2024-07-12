@@ -60,6 +60,18 @@ query = from(u in User, select: u)
 results = Repo.all(query)
 ```
 
+### Getting Deleted Rows
+
+To query for items that have been deleted, use `with_deleted: true` 
+
+```elixir
+import Ecto.Query
+
+query = from(u in User, select: u)
+
+results = Repo.all(query, with_deleted: true)
+```
+
 ## Repos
 
 To support deletion in repos, just add `use Ecto.SoftDelete.Repo` to your repo.
@@ -94,7 +106,7 @@ Add to mix.exs:
 
 ```elixir
 defp deps do
-  [{:ecto_soft_delete, "~> 1.0"}]
+  [{:ecto_soft_delete, "~> 2.0"}]
 end
 ```
 
