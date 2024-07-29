@@ -1,10 +1,13 @@
 defmodule EctoSoftDelete.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/revelrylabs/ecto_soft_delete"
+  @version "2.0.4"
+
   def project do
     [
       app: :ecto_soft_delete,
-      version: "2.0.4",
+      version: @version,
       elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       build_embedded: Mix.env() == :prod,
@@ -17,8 +20,8 @@ defmodule EctoSoftDelete.Mixfile do
         "coveralls.html": :test
       ],
       deps: deps(),
+      docs: docs(),
       package: package(),
-      description: description()
     ]
   end
 
@@ -33,20 +36,15 @@ defmodule EctoSoftDelete.Mixfile do
     [
       {:ecto_sql, "~> 3.5"},
       {:postgrex, ">= 0.0.0", only: [:test]},
-      {:ex_doc, "~> 0.16", only: [:dev, :test]},
+      {:ex_doc, ">= 0.0.0", only: [:dev, :test]},
       {:credo, "~> 1.0", only: [:dev, :test]},
       {:excoveralls, "~> 0.8", only: [:dev, :test]}
     ]
   end
 
-  defp description do
-    """
-    Soft deletion with Ecto.
-    """
-  end
-
   defp package do
     [
+      description: "Soft deletion with Ecto.",
       files: ["lib", "mix.exs", "README.md", "LICENSE", "CHANGELOG.md"],
       maintainers: ["Bryan Joseph", "Luke Ledet"],
       licenses: ["MIT"],
@@ -54,6 +52,22 @@ defmodule EctoSoftDelete.Mixfile do
         "GitHub" => "https://github.com/revelrylabs/ecto_soft_delete"
       },
       build_tools: ["mix"]
+    ]
+  end
+
+  defp docs do
+    [
+      extras: [
+        "CHANGELOG.md": [title: "Changelog"],
+        "CONTRIBUTING.md": [title: "Contributing"],
+        "CODE_OF_CONDUCT.md": [title: "Code of Conduct"],
+        "LICENSE.md": [title: "License"],
+        "README.md": [title: "Overview"]
+      ],
+      main: "readme",
+      source_url: @source_url,
+      source_ref: "v#{@version}",
+      formatters: ["html"]
     ]
   end
 end
