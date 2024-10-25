@@ -13,6 +13,16 @@ defmodule Ecto.SoftDelete.Repo.Test do
     end
   end
 
+  defmodule UserWithSkipPrepareQuery do
+    use Ecto.Schema
+    import Ecto.SoftDelete.Schema
+
+    schema "users" do
+      field(:email, :string)
+      soft_delete_schema(skip_prepare_query?: true)
+    end
+  end
+
   defmodule Nondeletable do
     use Ecto.Schema
 
@@ -127,6 +137,17 @@ defmodule Ecto.SoftDelete.Repo.Test do
         |> Repo.all()
 
       refute Enum.member?(results, user)
+      assert Enum.member?(results, soft_deleted_user)
+    end
+
+    test "includes soft deleted records if `skip_prepare_query?` is true" do
+      user = Repo.insert!(%UserWithSkipPrepareQuery{email: "test0@example.com"})
+      soft_deleted_user =
+        Repo.insert!(%UserWithSkipPrepareQuery{email: "deleted@example.com", deleted_at: DateTime.utc_now()})
+
+      results = UserWithSkipPrepareQuery |> Repo.all()
+
+      assert Enum.member?(results, user)
       assert Enum.member?(results, soft_deleted_user)
     end
 

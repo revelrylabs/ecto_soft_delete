@@ -39,6 +39,17 @@ defmodule Ecto.SoftDelete.Query do
     Enum.member?(fields, :deleted_at)
   end
 
+  @doc"""
+  Returns `true` if the schema is not flagged to skip auto-filtering
+  """
+  @spec auto_include_deleted_at_clause?(Ecto.Queriable.t) :: boolean()
+  def auto_include_deleted_at_clause?(query) do
+    schema_module = get_schema_module(query)
+
+   !Kernel.function_exported?(schema_module, :skip_soft_delete_prepare_query?, 0) ||
+      !schema_module.skip_soft_delete_prepare_query?()
+  end
+
   defp get_schema_module({_raw_schema, module}) when not is_nil(module), do: module
   defp get_schema_module(%Ecto.Query{from: %{source: source}}), do: get_schema_module(source)
   defp get_schema_module(%Ecto.SubQuery{query: query}), do: get_schema_module(query)
