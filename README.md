@@ -41,8 +41,22 @@ Import `Ecto.SoftDelete.Schema` into your Schema module, then add `soft_delete_s
     import Ecto.SoftDelete.Schema
 
     schema "users" do
-      field :email,           :string
+      field :email, :string
       soft_delete_schema()
+    end
+  end
+```
+
+If you want to make sure auto-filtering is disabled for a schema, set the `auto_exclude_from_queries?` option to false
+
+```elixir
+  defmodule User do
+    use Ecto.Schema
+    import Ecto.SoftDelete.Schema
+
+    schema "users" do
+      field :email, :string
+      soft_delete_schema(auto_exclude_from_queries?: false)
     end
   end
 ```
@@ -72,6 +86,9 @@ query = from(u in User, select: u)
 results = Repo.all(query, with_deleted: true)
 ```
 
+> [!IMPORTANT]
+> This only works for the topmost schema. If using `Ecto.SoftDelete.Repo`, rows fetched through associations (such as when using `Repo.preload/2`) will still be filtered.
+
 ## Repos
 
 To support deletion in repos, just add `use Ecto.SoftDelete.Repo` to your repo.
@@ -99,6 +116,8 @@ end
 post = Repo.get!(Post, 42)
 struct = Repo.soft_delete!(post)
 ```
+
+`Ecto.SoftDelete.Repo` will also intercept all queries made with the repo and automatically add a clause to filter out soft-deleted rows.
 
 ## Installation
 

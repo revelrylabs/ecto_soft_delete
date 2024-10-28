@@ -78,7 +78,13 @@ defmodule Ecto.SoftDelete.Repo do
       NOTE: will not exclude soft deleted records if :with_deleted option passed as true
       """
       def prepare_query(_operation, query, opts) do
-        if has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable?(query) do
+        skip_deleted_at_clause? =
+          has_include_deleted_at_clause?(query) ||
+            opts[:with_deleted] ||
+            !soft_deletable?(query) ||
+            !auto_include_deleted_at_clause?(query)
+
+        if skip_deleted_at_clause? do
           {query, opts}
         else
           query = from(x in query, where: is_nil(x.deleted_at))
