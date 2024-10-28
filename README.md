@@ -41,7 +41,7 @@ Import `Ecto.SoftDelete.Schema` into your Schema module, then add `soft_delete_s
     import Ecto.SoftDelete.Schema
 
     schema "users" do
-      field :email,           :string
+      field :email, :string
       soft_delete_schema()
     end
   end
@@ -55,7 +55,7 @@ If you want to make sure auto-filtering is disabled for a schema, set the `auto_
     import Ecto.SoftDelete.Schema
 
     schema "users" do
-      field :email,           :string
+      field :email, :string
       soft_delete_schema(auto_exclude_from_queries?: false)
     end
   end

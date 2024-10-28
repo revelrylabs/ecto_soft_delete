@@ -11,14 +11,14 @@ defmodule Ecto.SoftDelete.Schema do
         import Ecto.SoftDelete.Schema
 
         schema "users" do
-          field :email,           :string
+          field :email, :string
           soft_delete_schema()
         end
       end
 
   Options:
   - `:auto_exclude_from_queries?` - If false, Ecto.SoftDelete.Repo won't
-  automatically add the necessary clause to filter aout soft-deleted rows. See
+  automatically add the necessary clause to filter out soft-deleted rows. See
   `Ecto.SoftDelete.Repo.prepare_query` for more info. Defaults to `true`.
 
   """
