@@ -17,21 +17,21 @@ defmodule Ecto.SoftDelete.Schema do
       end
 
   Options:
-  - `:skip_prepare_query?` - If true, Ecto.SoftDelete.Repo won't automatically
-  add the necessary clause to filter aout soft-deleted rows. See
-  `Ecto.SoftDelete.Repo.prepare_query` for more info. Defaults to `false`.
+  - `:auto_exclude_from_queries?` - If false, Ecto.SoftDelete.Repo won't
+  automatically add the necessary clause to filter aout soft-deleted rows. See
+  `Ecto.SoftDelete.Repo.prepare_query` for more info. Defaults to `true`.
 
   """
   defmacro soft_delete_schema(opts \\ []) do
     filter_tag_definition =
-      if Keyword.get(opts, :skip_prepare_query?, false) do
+      unless Keyword.get(opts, :auto_exclude_from_queries?, true) do
         quote do
           def skip_soft_delete_prepare_query?, do: true
         end
       end
 
     quote do
-      field :deleted_at, :utc_datetime_usec
+      field(:deleted_at, :utc_datetime_usec)
       unquote(filter_tag_definition)
     end
   end
