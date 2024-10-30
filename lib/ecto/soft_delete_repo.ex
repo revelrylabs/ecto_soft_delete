@@ -81,9 +81,35 @@ defmodule Ecto.SoftDelete.Repo do
         if has_include_deleted_at_clause?(query) || opts[:with_deleted] || !soft_deletable?(query) do
           {query, opts}
         else
-          query = from(x in query, where: is_nil(x.deleted_at))
+          query = filter_soft_deleted(query)
           {query, opts}
         end
+      end
+
+      # We need to check the entire query and apply filtering
+      # where appropriate.  So, we recurse the query here and
+      # rebuild it with filtering where appropriate.  This
+      # currently only considers the source and does not handle
+      # things like joins...
+      defp filter_soft_deleted(%Ecto.Query{from: %{source: {_schema, _module}}} = query) do
+        if Ecto.SoftDelete.Query.soft_deletable?(query) do
+          from(x in query, where: is_nil(x.deleted_at))
+        else
+          query
+        end
+      end
+
+      defp filter_soft_deleted(%Ecto.SubQuery{query: query} = sub) do
+        if Ecto.SoftDelete.Query.soft_deletable?(query) do
+          from(x in query, where: is_nil(x.deleted_at)) |> subquery()
+        else
+          sub
+        end
+      end
+
+      defp filter_soft_deleted(%Ecto.Query{from: from} = query) do
+        updated_from = %{from | source: filter_soft_deleted(from.source)}
+        %{query | from: updated_from}
       end
 
       # Checks the query to see if it contains a where not is_nil(deleted_at)
