@@ -101,7 +101,7 @@ defmodule Ecto.SoftDelete.Repo do
 
       defp filter_soft_deleted(%Ecto.SubQuery{query: query} = sub) do
         if Ecto.SoftDelete.Query.soft_deletable?(query) do
-          from(x in query, where: is_nil(x.deleted_at)) |> subquery()
+          %{sub | query: from(x in query, where: is_nil(x.deleted_at))}
         else
           sub
         end
