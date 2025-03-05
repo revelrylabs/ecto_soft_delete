@@ -82,13 +82,15 @@ defmodule Ecto.SoftDelete.Repo do
 
       # Define soft_delete and soft_delete! with options
       def soft_delete(struct_or_changeset, opts \\ []) do
-        changeset = Ecto.Changeset.change(struct_or_changeset, deleted_at: DateTime.utc_now())
-        __MODULE__.update(changeset, opts)
+        struct_or_changeset
+        |> Ecto.Changeset.change(deleted_at: DateTime.utc_now())
+        |> __MODULE__.update(opts)
       end
 
       def soft_delete!(struct_or_changeset, opts \\ []) do
-        changeset = Ecto.Changeset.change(struct_or_changeset, deleted_at: DateTime.utc_now())
-        __MODULE__.update!(changeset, opts)
+        struct_or_changeset
+        |> Ecto.Changeset.change(deleted_at: DateTime.utc_now())
+        |> __MODULE__.update!(opts)
       end
 
       @doc """
