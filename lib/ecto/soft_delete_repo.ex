@@ -19,7 +19,7 @@ defmodule Ecto.SoftDelete.Repo do
   unless a `select` is supplied in the update query.
 
   ## Options
-  
+
   All options supported by `c:Ecto.Repo.update_all/3` can be used.
 
   ## Examples
@@ -89,12 +89,10 @@ defmodule Ecto.SoftDelete.Repo do
         changeset = Ecto.Changeset.change(struct_or_changeset, deleted_at: DateTime.utc_now())
 
         case opts do
-          # Original behavior without options
           [] ->
             changesetForUpdate = changeset
             __MODULE__.update(changesetForUpdate)
 
-          # New behavior with options
           _ ->
             __MODULE__.update(changeset, opts)
         end
@@ -107,6 +105,7 @@ defmodule Ecto.SoftDelete.Repo do
           [] ->
             changesetForUpdate = changeset
             __MODULE__.update!(changesetForUpdate)
+
           _ ->
             __MODULE__.update!(changeset, opts)
         end

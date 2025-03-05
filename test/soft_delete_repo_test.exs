@@ -2,6 +2,7 @@ defmodule Ecto.SoftDelete.Repo.Test do
   use ExUnit.Case
   alias Ecto.SoftDelete.Test.Repo
   import Ecto.Query
+  import ExUnit.CaptureLog
 
   defmodule User do
     use Ecto.Schema
@@ -139,6 +140,18 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
       assert %DateTime{} =
                Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
+    end
+
+    test "soft deletes with log option" do
+      Repo.insert!(%User{email: "test0@example.com"})
+
+      log =
+        capture_log(fn ->
+          Repo.soft_delete_all(User, log: :info)
+        end)
+
+      assert log =~ "UPDATE"
+      assert log =~ "deleted_at"
     end
   end
 
