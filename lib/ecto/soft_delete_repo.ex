@@ -18,13 +18,21 @@ defmodule Ecto.SoftDelete.Repo do
   result as second element. The second element is `nil` by default
   unless a `select` is supplied in the update query.
 
+  ## Options
+  
+  All options supported by `c:Ecto.Repo.update_all/3` can be used.
+
   ## Examples
 
       MyRepo.soft_delete_all(Post)
       from(p in Post, where: p.id < 10) |> MyRepo.soft_delete_all()
 
+      # With schema prefix for multi-tenant databases
+      MyRepo.soft_delete_all(Post, prefix: "tenant_abc")
+
   """
-  @callback soft_delete_all(queryable :: Ecto.Queryable.t()) :: {integer, nil | [term]}
+  @callback soft_delete_all(queryable :: Ecto.Queryable.t(), opts :: Keyword.t()) ::
+              {integer, nil | [term()]}
 
   @doc """
   Soft deletes a struct.
@@ -32,6 +40,10 @@ defmodule Ecto.SoftDelete.Repo do
   It returns `{:ok, struct}` if the struct has been successfully
   soft deleted or `{:error, changeset}` if there was a validation
   or a known constraint error.
+
+  ## Options
+
+  All options supported by `c:Ecto.Repo.update/2` can be used.
 
   ## Examples
 
@@ -41,35 +53,63 @@ defmodule Ecto.SoftDelete.Repo do
         {:error, changeset} -> # Something went wrong
       end
 
+      # With schema prefix for multi-tenant databases
+      MyRepo.soft_delete(post, prefix: "tenant_abc")
+
   """
-  @callback soft_delete(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
-              {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
+  @callback soft_delete(
+              struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t(),
+              opts :: Keyword.t()
+            ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   @doc """
   Same as `c:soft_delete/1` but returns the struct or raises if the changeset is invalid.
   """
-  @callback soft_delete!(struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t()) ::
-              Ecto.Schema.t()
+  @callback soft_delete!(
+              struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t(),
+              opts :: Keyword.t()
+            ) :: Ecto.Schema.t()
 
   defmacro __using__(_opts) do
     quote do
       import Ecto.Query
       import Ecto.SoftDelete.Query
 
-      def soft_delete_all(queryable) do
-        update_all(queryable, set: [deleted_at: DateTime.utc_now()])
+      def soft_delete_all(queryable, opts \\ []) do
+        set_expr = [set: [deleted_at: DateTime.utc_now()]]
+
+        case opts do
+          [] -> update_all(queryable, set_expr)
+          _ -> update_all(queryable, set_expr, opts)
+        end
       end
 
-      def soft_delete(struct_or_changeset) do
-        struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: DateTime.utc_now())
-        |> update()
+      # Define soft_delete and soft_delete! with options
+      def soft_delete(struct_or_changeset, opts \\ []) do
+        changeset = Ecto.Changeset.change(struct_or_changeset, deleted_at: DateTime.utc_now())
+
+        case opts do
+          # Original behavior without options
+          [] ->
+            changesetForUpdate = changeset
+            __MODULE__.update(changesetForUpdate)
+
+          # New behavior with options
+          _ ->
+            __MODULE__.update(changeset, opts)
+        end
       end
 
-      def soft_delete!(struct_or_changeset) do
-        struct_or_changeset
-        |> Ecto.Changeset.change(deleted_at: DateTime.utc_now())
-        |> update!()
+      def soft_delete!(struct_or_changeset, opts \\ []) do
+        changeset = Ecto.Changeset.change(struct_or_changeset, deleted_at: DateTime.utc_now())
+
+        case opts do
+          [] ->
+            changesetForUpdate = changeset
+            __MODULE__.update!(changesetForUpdate)
+          _ ->
+            __MODULE__.update!(changeset, opts)
+        end
       end
 
       @doc """

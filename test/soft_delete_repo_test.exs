@@ -55,6 +55,18 @@ defmodule Ecto.SoftDelete.Repo.Test do
     end
   end
 
+  describe "soft_delete!/2 with options" do
+    test "should soft delete the queryable and pass options to update!" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+
+      # Test with empty options list
+      assert %User{} = Repo.soft_delete!(user, [])
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+    end
+  end
+
   describe "soft_delete/1" do
     test "should soft delete the queryable" do
       user = Repo.insert!(%User{email: "test0@example.com"})
@@ -72,6 +84,18 @@ defmodule Ecto.SoftDelete.Repo.Test do
       assert_raise Ecto.StaleEntryError, fn ->
         Repo.soft_delete(user)
       end
+    end
+  end
+
+  describe "soft_delete/2 with options" do
+    test "should soft delete the queryable and pass options to update" do
+      user = Repo.insert!(%User{email: "test0@example.com"})
+
+      # Test with empty options list
+      assert {:ok, %User{}} = Repo.soft_delete(user, [])
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
     end
   end
 
@@ -97,6 +121,24 @@ defmodule Ecto.SoftDelete.Repo.Test do
 
     test "when no results are found" do
       assert Repo.soft_delete_all(User) == {0, nil}
+    end
+  end
+
+  describe "soft_delete_all/2 with options" do
+    test "soft deletes the query and passes options to update_all" do
+      Repo.insert!(%User{email: "test0@example.com"})
+      Repo.insert!(%User{email: "test1@example.com"})
+
+      # Test with empty options list
+      assert Repo.soft_delete_all(User, []) == {2, nil}
+
+      assert User |> Repo.all(with_deleted: true) |> length() == 2
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test0@example.com"], with_deleted: true).deleted_at
+
+      assert %DateTime{} =
+               Repo.get_by!(User, [email: "test1@example.com"], with_deleted: true).deleted_at
     end
   end
 

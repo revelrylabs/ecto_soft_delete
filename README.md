@@ -117,6 +117,17 @@ post = Repo.get!(Post, 42)
 struct = Repo.soft_delete!(post)
 ```
 
+### Using Options with Soft Delete Functions
+All soft delete functions support the same options as their Ecto counterparts:
+
+```elixir
+# With schema prefix for multi-tenant databases
+Repo.soft_delete(post, prefix: "tenant_abc")
+Repo.soft_delete!(post, prefix: "tenant_abc")
+Repo.soft_delete_all(Post, prefix: "tenant_abc")
+```
+This allows for seamless integration with features like PostgreSQL schema prefixes for multi-tenancy.
+
 `Ecto.SoftDelete.Repo` will also intercept all queries made with the repo and automatically add a clause to filter out soft-deleted rows.
 
 ## Installation
