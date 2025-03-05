@@ -63,7 +63,7 @@ defmodule Ecto.SoftDelete.Repo do
             ) :: {:ok, Ecto.Schema.t()} | {:error, Ecto.Changeset.t()}
 
   @doc """
-  Same as `c:soft_delete/1` but returns the struct or raises if the changeset is invalid.
+  Same as `c:soft_delete/2` but returns the struct or raises if the changeset is invalid.
   """
   @callback soft_delete!(
               struct_or_changeset :: Ecto.Schema.t() | Ecto.Changeset.t(),
