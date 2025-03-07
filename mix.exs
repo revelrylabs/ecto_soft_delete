@@ -4,7 +4,7 @@ defmodule EctoSoftDelete.Mixfile do
   def project do
     [
       app: :ecto_soft_delete,
-      version: "2.0.4",
+      version: "2.1.4",
       elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       build_embedded: Mix.env() == :prod,
@@ -48,7 +48,7 @@ defmodule EctoSoftDelete.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README.md", "LICENSE", "CHANGELOG.md"],
-      maintainers: ["Bryan Joseph", "Luke Ledet"],
+      maintainers: ["Bryan Joseph", "Luke Ledet", "Revelry Labs"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/revelrylabs/ecto_soft_delete"

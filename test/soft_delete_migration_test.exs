@@ -7,7 +7,13 @@ defmodule Ecto.SoftDelete.Migration.Test do
 
   setup meta do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
-    {:ok, runner} = Runner.start_link({self(), Repo, Repo.config(), __MODULE__, meta[:direction] || :forward, :up, %{level: false, sql: false}})
+
+    {:ok, runner} =
+      Runner.start_link(
+        {self(), Repo, Repo.config(), __MODULE__, meta[:direction] || :forward, :up,
+         %{level: false, sql: false}}
+      )
+
     Runner.metadata(runner, meta)
     {:ok, runner: runner}
   end
@@ -21,7 +27,6 @@ defmodule Ecto.SoftDelete.Migration.Test do
 
     flush()
 
-    assert {:create, _,
-       [{:add, :deleted_at, :utc_datetime_usec, []}]} = create_command
+    assert {:create, _, [{:add, :deleted_at, :utc_datetime_usec, []}]} = create_command
   end
 end

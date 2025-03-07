@@ -1,7 +1,7 @@
-[![Build Status](https://travis-ci.org/revelrylabs/ecto_soft_delete.svg?branch=master)](https://travis-ci.org/revelrylabs/ecto_soft_delete)
+![Build Status](https://github.com/revelrylabs/ecto_soft_delete/actions/workflows/test.yml/badge.svg)
+![Publish Status](https://github.com/revelrylabs/ecto_soft_delete/actions/workflows/publish.yml/badge.svg)
 [![Hex.pm](https://img.shields.io/hexpm/dt/ecto_soft_delete.svg)](https://hex.pm/packages/ecto_soft_delete)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Coverage Status](https://opencov.prod.revelry.net/projects/21/badge.svg)](https://opencov.prod.revelry.net/projects/21)
 
 # EctoSoftDelete
 

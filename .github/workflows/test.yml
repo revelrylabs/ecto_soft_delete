@@ -48,3 +48,4 @@ jobs:
           cp config/test.exs.GH_actions config/test.exs
           mix ecto.create
           mix test
+          mix format --check-formatted
