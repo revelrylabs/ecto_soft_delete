@@ -136,7 +136,7 @@ Add to mix.exs:
 
 ```elixir
 defp deps do
-  [{:ecto_soft_delete, "~> 2.0.5"}]
+  [{:ecto_soft_delete, "~> 2.0"}]
 end
 ```
 
