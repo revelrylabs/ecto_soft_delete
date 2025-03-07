@@ -14,7 +14,7 @@ defmodule Ecto.SoftDelete.Query do
       results = Repo.all(query)
 
   """
-  @spec with_undeleted(Ecto.Queryable.t) :: Ecto.Queryable.t
+  @spec with_undeleted(Ecto.Queryable.t()) :: Ecto.Queryable.t()
   def with_undeleted(query) do
     if soft_deletable?(query) do
       query
@@ -31,7 +31,7 @@ defmodule Ecto.SoftDelete.Query do
       |> soft_deletable?
 
   """
-  @spec soft_deletable?(Ecto.Queryable.t) :: boolean()
+  @spec soft_deletable?(Ecto.Queryable.t()) :: boolean()
   def soft_deletable?(query) do
     schema_module = get_schema_module(query)
     fields = if schema_module, do: schema_module.__schema__(:fields), else: []
@@ -39,14 +39,14 @@ defmodule Ecto.SoftDelete.Query do
     Enum.member?(fields, :deleted_at)
   end
 
-  @doc"""
+  @doc """
   Returns `true` if the schema is not flagged to skip auto-filtering
   """
-  @spec auto_include_deleted_at_clause?(Ecto.Queriable.t) :: boolean()
+  @spec auto_include_deleted_at_clause?(Ecto.Queriable.t()) :: boolean()
   def auto_include_deleted_at_clause?(query) do
     schema_module = get_schema_module(query)
 
-   !Kernel.function_exported?(schema_module, :skip_soft_delete_prepare_query?, 0) ||
+    !Kernel.function_exported?(schema_module, :skip_soft_delete_prepare_query?, 0) ||
       !schema_module.skip_soft_delete_prepare_query?()
   end
 

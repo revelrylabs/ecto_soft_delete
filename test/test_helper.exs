@@ -1,5 +1,5 @@
 {:ok, _} = Application.ensure_all_started(:postgrex)
-{:ok, _pid} = Ecto.SoftDelete.Test.Repo.start_link
+{:ok, _pid} = Ecto.SoftDelete.Test.Repo.start_link()
 
 defmodule Ecto.SoftDelete.Test.Migrations do
   use Ecto.Migration
@@ -7,6 +7,7 @@ defmodule Ecto.SoftDelete.Test.Migrations do
 
   def change do
     drop_if_exists table(:users)
+
     create table(:users) do
       add :email, :string
       soft_delete_columns()
