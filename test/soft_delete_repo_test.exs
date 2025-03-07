@@ -180,6 +180,16 @@ defmodule Ecto.SoftDelete.Repo.Test do
       assert Enum.member?(results, soft_deleted_user)
     end
 
+    test "handles subquery that does not expose deleted_at as 'main' schema" do
+      Repo.insert!(%User{email: "test0@example.com"})
+      Repo.insert!(%Nondeletable{value: "stuff"})
+
+      subq = User |> where([u], u.email == "test0@example.com") |> select([u], %{id: u.id, email: u.email})
+      query = subquery(subq) |> join(:left, [u], nondel in Nondeletable, on: u.id == nondel.id)
+
+      Repo.all(query)
+    end
+
     test "includes soft deleted records if where not is_nil(deleted_at) clause is present" do
       user = Repo.insert!(%User{email: "test0@example.com"})
 
