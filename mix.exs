@@ -4,7 +4,7 @@ defmodule EctoSoftDelete.Mixfile do
   def project do
     [
       app: :ecto_soft_delete,
-      version: "2.0.5",
+      version: "2.1.4",
       elixir: "~> 1.11",
       elixirc_paths: elixirc_paths(Mix.env()),
       build_embedded: Mix.env() == :prod,
